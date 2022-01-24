@@ -43,7 +43,7 @@ public:
 	//CONSTRUCTORS//
 	explicit vector( const allocator_type & alloc = allocator_type()): _array(NULL), _size(0), _max_size(alloc.max_size()), _allocation(alloc), _capacity(0)
 	{
-		//nothing here
+		_array = _allocation.allocate(0);
 	}
 
 	explicit vector( size_type n, const value_type & val = value_type(), const allocator_type & alloc = allocator_type()): _size(n), _max_size(alloc.max_size()), _allocation(alloc), _capacity(n)
@@ -59,6 +59,7 @@ public:
 	vector( InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type()): _max_size(alloc.max_size()), _allocation(alloc)
 	{
 		// I need to write the iterator before doing that
+		// DO STUFF WITH ITERATORS HERE
 	}
 
 	vector( const vector & src ): _size(src._size), _max_size(src._max_size), _capacity(src._capacity)
@@ -162,9 +163,11 @@ public:
 				_allocation.destroy(_array + (_size - i));
 			_size = _size - (_size - n);
 		}
-		else if (n >= _size && n <= _capacity)
+		else if (n > _size && n <= _capacity)
 		{
-			//DO STUFF HERE
+			for (size_type i = 0; i < n - _size; i++)
+				_allocation.construct(_array + (_size + i), value);
+			_size = n;
 		}
 		else if (n > _capacity)
 		{
@@ -186,9 +189,24 @@ public:
 		return false;
 	}
 
-	void					reserve( size_type new_cap )
+	void					reserve( size_type n )
 	{
 		if (n > _capacity)
+		{
+			if (n > _max_size)
+				throw std::length_error();
+			vector<value_type> copy(*this);
+			clear();
+			_size = n;
+			_max_size = alloc.max_size();
+			_capacity = n;
+			_array = _allocation.allocate(n);
+			for (size_type i = 0; i < copy._size; i++)
+			{
+				_allocation.construct(_array + i, copy[i]);
+			}
+			copy.clear();
+		}
 	}
 
 
@@ -198,7 +216,6 @@ public:
 	| |___| |___| |___| |  | | |___| |\  | | |    / ___ \ |__| |___| |___ ___) |__) |
 	|_____|_____|_____|_|  |_|_____|_| \_| |_|   /_/   \_\____\____|_____|____/____/  */
 
-	// ACCESSING SPECIFIED ELEMENT
 	reference				operator[]( size_type pos )
 	{
 		return _array[pos];
@@ -274,27 +291,60 @@ public:
 	}
 
 	template <class InputIt>
-	void					assign( InputIt first, InputIt last );
-
-	void					push_back( const value_type & value );
+	void					assign( InputIt first, InputIt last )
 	{
-		if ()
+		// DO STUFF HERE WITH ITERATORS
 	}
 
-	void					pop_back( void );
+	void					push_back( const value_type & value ) // TESTER L'INVALIDATION DES ITERATEURS PAR UN RESIZE * 2
+	{
+		if (_size == 0)
+			reserve(1);
+		else if (_size == _capacity)
+			reserve(_size * 2);
+		_allocation.construct(_array + _size, value);
+		_size = _size + 1;
+		
+	}
 
-	iterator				insert( iterator pos, const value_type & value);
+	void					pop_back( void )
+	{
+		if (this.empty())
+			return;
+		_allocation.destroy(_array + _size - 1);
+		_size = _size - 1;
+	}
 
-	iterator				insert( const_iterator pos, size_type count, const value_type & & value );
+	iterator				insert( iterator pos, const value_type & value)
+	{
+		// DO STUFF HERE WITH ITERATORS
+	}
+
+	iterator				insert( const_iterator pos, size_type count, const value_type & & value )
+	{
+		// DO STUFF HERE WITH ITERATORS
+	}
 
 	template <class InputIt>
-	void					insert( iterator pos, InputIt first, InputIt last );
+	void					insert( iterator pos, InputIt first, InputIt last )
+	{
+		// DO STUFF HERE WITH ITERATORS
+	}
 
-	iterator				erase( iterator pos );
+	iterator				erase( iterator pos )
+	{
+		// DO STUFF HERE WITH ITERATORS
+	}
 
-	iterator				erase( iterator first, iterator last );
+	iterator				erase( iterator first, iterator last )
+	{
+		// DO STUFF HERE WITH ITERATORS
+	}
 
-	void					swap( vector & other );
+	void					swap( vector & other )
+	{
+		
+	}
 
 	void					clear( void )
 	{
