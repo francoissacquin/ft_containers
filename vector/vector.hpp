@@ -242,21 +242,25 @@ public:
 
 	reference				front( void )
 	{
+		// return *begin();
 		return _array[0];
 	}
 
 	const_reference			front( void ) const
 	{
+		// return *begin();
 		return _array[0];
 	}
 
 	reference				back( void )
 	{
+		// return *(end() - 1);
 		return _array[_size - 1];
 	}
 
 	const_reference			back( void ) const
 	{
+		// return *(end() - 1);
 		return _array[_size - 1];
 	}
 
@@ -343,7 +347,29 @@ public:
 
 	void					swap( vector & other )
 	{
-		
+		value_type		*copy_array;
+		size_type		copy_size;
+		size_type		copy_max_size;
+		allocator_type	copy_allocation;
+		size_type		copy_capacity;
+
+		copy_array = _array;
+		copy_size = _size;
+		copy_max_size = _max_size;
+		copy_allocation = _allocation;
+		copy_capacity = _capacity;
+
+		_array = other._array;
+		_size = other._size;
+		_max_size = other._max_size;
+		_allocation = other._allocation;
+		_capacity = other._capacity;
+
+		other._array = copy_array;
+		other._size = copy_size;
+		other._max_size = copy_max_size;
+		other._allocation = copy_allocation;
+		other._capacity = copy_capacity;
 	}
 
 	void					clear( void )
@@ -362,7 +388,11 @@ public:
 	 / ___ \| |___| |__| |_| | |___ / ___ \| || |_| |  _ < 
 	/_/   \_\_____|_____\___/ \____/_/   \_\_| \___/|_| \_\ */
 
-	allocator_type			get_allocator( void ) const;
+	allocator_type			get_allocator( void ) const
+	{
+		std::allocator<value_type>	copy(_allocation);
+		return copy;
+	}
 
 };// end of vector class
 
@@ -373,26 +403,71 @@ public:
 	| |\  | |_| | |\  |_____| |  | | |___| |  | | |_) | |___|  _ <  |  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
 	|_| \_|\___/|_| \_|     |_|  |_|_____|_|  |_|____/|_____|_| \_\ |_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/ */
 
-template <class T, class Allocator>
-bool		operator==( const vector<T, Allocator> & lhs, const vector<T, Allocator> & rhs );
+template <class T, class Alloc>
+bool		operator==( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
+{
+	if (lhs._size == rhs._size)
+	{
+		// possibility of replacing that by std::equal(lhs.begin(), lhs.end(), rhs.begin())
+		for (size_type i = 0; i < lhs._size; i++)
+		{
+			if (lhs._array[i] != rhs._array[i])
+				return false;
+		}
+		return true;
+	}
+	else
+		return false;
+}
 
-template <class T, class Allocator>
-bool		operator!=( const vector<T, Allocator> & lhs, const vector<T, Allocator> & rhs );
+template <class T, class Alloc>
+bool		operator!=( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
+{
+	if (lhs == rhs)
+		return false;
+	return true;
+}
 
-template <class T, class Allocator>
-bool		operator<( const vector<T, Allocator> & lhs, const vector<T, Allocator> & rhs );
+template <class T, class Alloc>
+bool		operator<( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
+{
+	//possibility of replacing by std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())
+	size_type	i = 0;
 
-template <class T, class Allocator>
-bool		operator<=( const vector<T, Allocator> & lhs, const vector<T, Allocator> & rhs );
+	while (i < lhs._size)
+	{
+		if (i == rhs._size || rhs._array[i] < lhs._array[i])
+			return false;
+		else if (lhs._array[i] < rhs._array[i])
+			return true;
+		i++;
+	}
+	return (i != rhs._size);
+}
 
-template <class T, class Allocator>
-bool		operator>( const vector<T, Allocator> & lhs, const vector<T, Allocator> & rhs );
+template <class T, class Alloc>
+bool		operator<=( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
+{
+	return !(rhs < lhs);
+}
 
-template <class T, class Allocator>
-bool		operator>=( const vector<T, Allocator> & lhs, const vector<T, Allocator> & rhs );
+template <class T, class Alloc>
+bool		operator>( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
+{
+	return (rhs < lhs);
+}
 
-template <class T, class Allocator>
-void		swap( vector<T, Allocator> & lhs, vector<T, Allocator> & rhs );
+template <class T, class Alloc>
+bool		operator>=( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
+{
+	return !(lhs < rhs);
+}
+
+template <class T, class Alloc>
+void		swap( vector<T, Alloc> & lhs, vector<T, Alloc> & rhs )
+{
+	lhs.swap(rhs);
+}
 
 }; //end of namespace
 

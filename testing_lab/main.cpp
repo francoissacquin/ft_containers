@@ -4,9 +4,10 @@
 int		main()
 {
 	std::vector<int> temp;
+	std::allocator<int> temp_alloc;
 
-	temp.pop_back();
-	temp.pop_back();
-	std::cout << "Temp = " << temp[0] << std::endl;
+	std::cout << temp_alloc.max_size() << std::endl;
+	temp.push_back(2);
+	std::cout << "Temp[0] = " << temp[0] << std::endl;
 	return (0);
 }
