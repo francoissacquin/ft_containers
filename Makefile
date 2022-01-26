@@ -2,9 +2,13 @@ NAME = containers
 
 CC = clang++
 
-SRCS = main.cpp
+SRCS = ./main.cpp
 
-INC = easyfind.hpp
+INC = vector/equal.hpp \
+ vector/lexicographical.hpp \
+ vector/random_access_iterator.hpp \
+ vector/vector.hpp
+
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -I.
 

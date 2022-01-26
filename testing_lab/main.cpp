@@ -3,11 +3,15 @@
 
 int		main()
 {
-	std::vector<int> temp;
-	std::allocator<int> temp_alloc;
+	std::vector<std::string> temp(1);
+	//std::allocator<int> temp_alloc;
 
-	std::cout << temp_alloc.max_size() << std::endl;
-	temp.push_back(2);
-	std::cout << "Temp[0] = " << temp[0] << std::endl;
+	
+	temp.push_back("a");
+	temp.push_back("b");
+	temp.push_back("c");
+	temp.resize(10, "w");
+	for (unsigned long i = 0; i < temp.size(); i++)
+		std::cout << "Temp[" << i << "] = " << temp[i] << std::endl;
 	return (0);
 }

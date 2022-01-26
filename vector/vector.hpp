@@ -1,6 +1,7 @@
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
+#include <memory>
 
 namespace ft
 {
@@ -20,8 +21,8 @@ public:
 	//MEMBER TYPES
 	typedef T								value_type;
 	typedef Alloc							allocator_type;
-	typedef size_t							size_type;
-	typedef ptrdiff_t						difference_type;
+	typedef std::size_t						size_type;
+	typedef std::ptrdiff_t					difference_type;
 	typedef value_type &					reference;
 	typedef const value_type &				const_reference;
 	typedef allocator_type::pointer			pointer;
