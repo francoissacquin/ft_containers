@@ -8,6 +8,8 @@
 // It serves mainly to define required member types for
 // iterators of all type (see Category for the different types).
 
+// You can also check out https://www.cplusplus.com/reference/iterator/iterator/
+
 // See also hapters 16 and 17 and 19 of "C++ Programming Language" 3rd edition
 // link to the book here : https://fr.fr1lib.org/book/465615/0af8bd
 

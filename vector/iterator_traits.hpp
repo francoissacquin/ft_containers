@@ -16,7 +16,7 @@ struct iterator_traits
 	typedef iterator::value_type			value_type;
 	typedef iterator::pointer				pointer;
 	typedef iterator::reference				reference;
-	typedef iterator::iterator_category		iterator;
+	typedef iterator::iterator_category		iterator_category;
 };
 
 // Specialization in order to use iterator operations on raw pointers
