@@ -136,9 +136,9 @@ public:
 	}
 
 	//BASE FUNCTION FOR NON-MEMBER FUNCTIONS TO GET ACCESS TO _ptr
-	const T&		base( void ) const
+	const T*		base( void ) const
 	{
-		return *_ptr;
+		return _ptr;
 	}
 };
 
