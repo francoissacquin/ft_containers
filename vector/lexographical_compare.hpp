@@ -34,6 +34,6 @@ bool		lexicographical_compare(InputIterator1 first1, InputIterator1 last1, Input
 	return (first2 != last2);
 }
 
-}; // end of namespace
+}; // end of namespace ft
 
 #endif

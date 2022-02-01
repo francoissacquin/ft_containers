@@ -41,6 +41,6 @@ struct iterator_traits < const T* >
 	typedef random_access_iterator_tag		iterator_category;
 };
 
-} // end of namespace
+} // end of namespace ft
 
 #endif

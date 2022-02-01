@@ -231,6 +231,6 @@ typename reverse_iterator<Iterator>::difference_type	operator-(const reverse_ite
 	return y.base() - x.base();
 }
 
-} // end of namespace
+} // end of namespace ft
 
 #endif

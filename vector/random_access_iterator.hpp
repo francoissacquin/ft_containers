@@ -43,7 +43,7 @@ public:
 	}
 
 	//CONVERSION TO CONST ITERATOR ALLOWED
-	operator random_access_iterator<const T*> () const
+	operator random_access_iterator<const T> () const
 	{
 		return random_access_iterator<const T>(_ptr);
 	}
@@ -191,7 +191,21 @@ bool				operator>=( const random_access_iterator<T> & lhs, const random_access_i
 	return (lhs.base() >= rhs.base());
 }
 
-}; // end of namespace
+// FUNCTION THAT REIMPLEMENTS STD::DISTANCE() FOR THE VECTOR MEMBER TYPES FUNCTIONS WHO USE RANDOM_ACCESS_ITERATORS
+template <class InputIterator>
+size_t		iter_distance(InputIterator first, InputIterator last)
+{
+	size_t		i = 0;
+
+	while (first != last)
+	{
+		first++;
+		i++;
+	}
+	return i;
+}
+
+}; // end of namespace ft
 
 
 #endif

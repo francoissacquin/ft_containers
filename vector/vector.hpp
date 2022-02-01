@@ -22,19 +22,18 @@ private:
 
 public:
 	//MEMBER TYPES
-	typedef T								value_type;
-	typedef Alloc							allocator_type;
-	typedef std::size_t						size_type;
-	typedef std::ptrdiff_t					difference_type;
-	typedef value_type &					reference;
-	typedef const value_type &				const_reference;
-	typedef allocator_type::pointer			pointer;
-	typedef allocator_type::const_pointer	const_pointer;
-	//faut que je vois plus tard pour faire les iterateurs
-	// comme ca on 		iterator
-	//					const_iterator
-	//					reverse_iterator
-	//					const_reverse_iterator
+	typedef T												value_type;
+	typedef Alloc											allocator_type;
+	typedef std::size_t										size_type;
+	typedef std::ptrdiff_t									difference_type;
+	typedef value_type &									reference;
+	typedef const value_type &								const_reference;
+	typedef allocator_type::pointer							pointer;
+	typedef allocator_type::const_pointer					const_pointer;
+	typedef ft::random_access_iterator<value_type>			iterator;
+	typedef	ft::random_access_iterator<const value_type>	const_iterator;
+	typedef	ft::reverse_iterator<iterator>					reverse_iterator;
+	typedef	ft::reverse_iterator<const_iterator>			const_reverse_iterator;
 
 
   /* __  __ _____ __  __ ____  _____ ____    _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
@@ -62,8 +61,14 @@ public:
 	template <class InputIterator>
 	vector( InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type()): _max_size(alloc.max_size()), _allocation(alloc)
 	{
-		// I need to write the iterator before doing that
-		// DO STUFF WITH ITERATORS HERE
+		_capacity = ft::iter_distance(first, last);
+		_size = _capacity;
+		_array = _allocation.allocate(_capacity);
+		for (size_type i = 0; i < _capacity && first != last; i++)
+		{
+			_allocation.construct(_array + i, *first);
+			first++;
+		}
 	}
 
 	vector( const vector & src ): _size(src._size), _max_size(src._max_size), _capacity(src._capacity)
@@ -301,7 +306,34 @@ public:
 	template <class InputIt>
 	void					assign( InputIt first, InputIt last )
 	{
-		// DO STUFF HERE WITH ITERATORS
+		size_t		len;
+
+		len = ft::iter_distance(first, last);
+		if (len == 0)
+			return ;
+		if (len > _capacity)
+		{
+			clear();
+			_size = len;
+			_capacity = len;
+			_array = _allocation.allocate(_capacity);
+			for (size_type i = 0; i < len; i++)
+			{
+				_allocation.construct(_array + i, *first);
+				first++;
+			}
+		}
+		else
+		{
+			for (size_type i = 0; i < _size; i++)
+				_allocation.destroy(_array + i);
+			_size = len;
+			for (size_type i = 0; i < _size; i++)
+			{
+				_allocation.construct(_array + i, *first);
+				first++;
+			}
+		}
 	}
 
 	void					push_back( const value_type & value ) // TESTER L'INVALIDATION DES ITERATEURS PAR UN RESIZE * 2
@@ -325,18 +357,72 @@ public:
 
 	iterator				insert( iterator pos, const value_type & value)
 	{
-		// DO STUFF HERE WITH ITERATORS
+		size_t	len;
+
+		if (pos == end())
+		{
+			push_back(value);
+			return (end() - 1);
+		}
+		else
+		{
+			len = ft::iterdistance(begin(), pos);
+			insert(begin() + len, 1, value);
+			return (begin() + len);
+		}
 	}
 
-	iterator				insert( const_iterator pos, size_type count, const value_type & & value )
+	void					insert( const_iterator pos, size_type count, const value_type & value )
 	{
-		// DO STUFF HERE WITH ITERATORS
+		if (count == 0)
+			return ;
+		if (pos == end())
+		{
+			for (size_type i = 0; i < count; i++)
+				push_back(value);
+		}
+		else
+		{
+			if (_size + count <= _capacity)
+			{
+				iterator	copy_pos = pos;
+				iterator	copy_end = end();
+				size_t		end_diff;
+				
+				end_diff = ft::iter_distance(pos, end());
+				for (size_type i = 0; i < end_diff; i--)
+				{
+					_allocation.construct( _array + _size + (count - i), *(end() - i));
+				}
+				for (size_type j = 0; j < count; j++)
+				{
+					_allocation.construct( pos + j, value);
+				}
+				_size += count;
+			}
+			else
+			{
+				reserve(_capacity * 2);
+				insert(pos, count, value);
+			}
+		}
 	}
 
 	template <class InputIt>
 	void					insert( iterator pos, InputIt first, InputIt last )
 	{
-		// DO STUFF HERE WITH ITERATORS
+		if (pos == end())
+		{
+			while (first != last)
+			{
+				push_back(*first);
+				first++;
+			}
+		}
+		else
+		{
+			// AAAAAAAAAAAAHHHH
+		}
 	}
 
 	iterator				erase( iterator pos )
