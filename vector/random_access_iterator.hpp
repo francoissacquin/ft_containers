@@ -31,6 +31,11 @@ public:
 		//nothing here
 	}
 
+	random_access_iterator( pointer	ptr): _ptr(ptr)
+	{
+		//nothing here
+	}
+
 	random_access_iterator( const random_access_iterator & src ): _ptr(src._ptr)
 	{
 		//nothing here
@@ -61,7 +66,7 @@ public:
 	//INCREMENTATION
 	random_access_iterator &	operator++( void )
 	{
-		this->_ptr++;
+		_ptr++;
 		return *this;
 	}
 
@@ -69,7 +74,7 @@ public:
 	{
 		random_access_iterator copy(*this);
 
-		this->_ptr++;
+		_ptr++;
 		return copy;
 	}
 
@@ -136,7 +141,7 @@ public:
 	}
 
 	//BASE FUNCTION FOR NON-MEMBER FUNCTIONS TO GET ACCESS TO _ptr
-	const T*		base( void ) const
+	T*			base( void ) const
 	{
 		return _ptr;
 	}
@@ -156,37 +161,37 @@ bool				operator==( const random_access_iterator<T_lhs> & lhs, const random_acce
 }
 
 template<typename T>
-bool				operator!=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs );
+bool				operator!=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs )
 {
 	return (lhs.base() != rhs.base());
 }
 
 template<typename T_lhs, typename T_rhs>
-bool				operator!=( const random_access_iterator<T_lhs> & lhs, const random_access_iterator<T_rhs> & rhs );
+bool				operator!=( const random_access_iterator<T_lhs> & lhs, const random_access_iterator<T_rhs> & rhs )
 {
 	return (lhs.base() != rhs.base());
 }
 
 template<typename T>
-bool				operator<( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs ) const
+bool				operator<( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs ) 
 {
 	return (lhs.base() < rhs.base());
 }
 
 template<typename T>
-bool				operator<=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs ) const
+bool				operator<=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs )
 {
 	return (lhs.base() <= rhs.base());
 }
 
 template<typename T>
-bool				operator>( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs ) const
+bool				operator>( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs )
 {
 	return (lhs.base() > rhs.base());
 }
 
 template<typename T>
-bool				operator>=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs ) const
+bool				operator>=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs )
 {
 	return (lhs.base() >= rhs.base());
 }

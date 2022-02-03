@@ -2,7 +2,7 @@ NAME = containers
 
 CC = clang++
 
-SRCS = ./main.cpp
+SRCS = ./vector_main.cpp
 
 INC = vector/equal.hpp \
  vector/lexicographical.hpp \

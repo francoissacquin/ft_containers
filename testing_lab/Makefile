@@ -4,7 +4,7 @@ CC = clang++
 
 SRCS = main.cpp
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -I.
+CFLAGS = -Wall -Wextra -Werror -I.
 
 OBJS := ${SRCS:.cpp=.o}
 

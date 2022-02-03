@@ -6,6 +6,8 @@
 #include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
 
+#include <iostream>
+
 namespace ft
 {
 
@@ -14,11 +16,11 @@ template < typename T, typename Alloc = std::allocator<T> >
 class vector
 {
 private:
-	value_type		*_array;
-	size_type		_size;
-	size_type		_max_size;
-	allocator_type	_allocation;
-	size_type		_capacity;
+	T				*_array;
+	std::size_t		_size;
+	std::size_t		_max_size;
+	Alloc			_allocation;
+	std::size_t		_capacity;
 
 public:
 	//MEMBER TYPES
@@ -28,8 +30,8 @@ public:
 	typedef std::ptrdiff_t									difference_type;
 	typedef value_type &									reference;
 	typedef const value_type &								const_reference;
-	typedef allocator_type::pointer							pointer;
-	typedef allocator_type::const_pointer					const_pointer;
+	typedef typename allocator_type::pointer				pointer;
+	typedef typename allocator_type::const_pointer			const_pointer;
 	typedef ft::random_access_iterator<value_type>			iterator;
 	typedef	ft::random_access_iterator<const value_type>	const_iterator;
 	typedef	ft::reverse_iterator<iterator>					reverse_iterator;
@@ -83,7 +85,8 @@ public:
 	//DESTRUCTORS//
 	~vector( void )
 	{
-		clear();
+		this->clear();
+		_allocation.deallocate(_array, _capacity);
 	}
 
 	//OPERATOR OVERLOAD//
@@ -91,7 +94,8 @@ public:
 	{
 		if (this != &rhs)
 		{
-			clear();
+			this->clear();
+			_allocation.deallocate(_array, _capacity);
 			_size = rhs._size;
 			_capacity = rhs._capacity;
 			_array = _allocation.allocate(_capacity);
@@ -183,6 +187,7 @@ public:
 			reserve(n);
 			for (size_type i = _size; i < n; i++)
 				_allocation.construct(_array + i, value);
+			_size = n;
 		}
 	}
 
@@ -203,11 +208,12 @@ public:
 		if (n > _capacity)
 		{
 			if (n > _max_size)
-				throw std::length_error();
+				throw std::length_error("vector");
 			vector<value_type> copy(*this);
-			clear();
-			_size = n;
-			_max_size = alloc.max_size();
+			this->clear();
+			_allocation.deallocate(_array, _capacity);
+			_size = copy._size;
+			_max_size = _allocation.max_size();
 			_capacity = n;
 			_array = _allocation.allocate(n);
 			for (size_type i = 0; i < copy._size; i++)
@@ -215,6 +221,7 @@ public:
 				_allocation.construct(_array + i, copy[i]);
 			}
 			copy.clear();
+			copy._allocation.deallocate(_array, _capacity);
 		}
 	}
 
@@ -237,14 +244,14 @@ public:
 
 	reference				at( size_type pos)
 	{
-		if (!(pos < size))
+		if (!(pos < _size))
 			throw std::out_of_range("vector");
 		return _array[pos];
 	}
 
 	const_reference			at( size_type pos ) const
 	{
-		if (!(pos < size))
+		if (!(pos < _size))
 			throw std::out_of_range("vector");
 		return _array[pos];
 	}
@@ -286,7 +293,8 @@ public:
 			return ;
 		if (n > _capacity)
 		{
-			clear();
+			this->clear();
+			_allocation.deallocate(_array, _capacity);
 			_size = n;
 			_capacity = n;
 			_array = _allocation.allocate(_capacity);
@@ -313,7 +321,8 @@ public:
 			return ;
 		if (len > _capacity)
 		{
-			clear();
+			this->clear();
+			_allocation.deallocate(_array, _capacity);
 			_size = len;
 			_capacity = len;
 			_array = _allocation.allocate(_capacity);
@@ -339,9 +348,13 @@ public:
 	void					push_back( const value_type & value ) // TESTER L'INVALIDATION DES ITERATEURS PAR UN RESIZE * 2
 	{
 		if (_size == 0)
+		{
 			reserve(1);
+		}
 		else if (_size == _capacity)
+		{
 			reserve(_size * 2);
+		}
 		_allocation.construct(_array + _size, value);
 		_size = _size + 1;
 		
@@ -349,7 +362,7 @@ public:
 
 	void					pop_back( void )
 	{
-		if (this.empty())
+		if (this->empty())
 			return;
 		_allocation.destroy(_array + _size - 1);
 		_size = _size - 1;
@@ -366,13 +379,13 @@ public:
 		}
 		else
 		{
-			len = ft::iterdistance(begin(), pos);
+			len = ft::iter_distance(begin(), pos);
 			insert(begin() + len, 1, value);
 			return (begin() + len);
 		}
 	}
 
-	void					insert( const_iterator pos, size_type count, const value_type & value )
+	void					insert( iterator pos, size_type count, const value_type & value )
 	{
 		if (count == 0)
 			return ;
@@ -387,22 +400,27 @@ public:
 			{
 				iterator	copy_pos = pos;
 				iterator	copy_end = end();
-				size_t		end_diff;
+				size_type		end_diff;
 				
 				end_diff = ft::iter_distance(pos, end());
 				for (size_type i = 0; i < end_diff; i--)
 				{
-					_allocation.construct( _array + _size + (count - i), *(end() - i));
+					_allocation.construct( _array + _size + (count - i), *(copy_end() - (i + 1)));
 				}
 				for (size_type j = 0; j < count; j++)
 				{
-					_allocation.construct( pos + j, value);
+					_allocation.construct( copy_pos + j, value);
 				}
 				_size += count;
 			}
-			else
+			else if (_size + count < _capacity * 2)
 			{
 				reserve(_capacity * 2);
+				insert(pos, count, value);
+			}
+			else
+			{
+				reserve(_size + count);
 				insert(pos, count, value);
 			}
 		}
@@ -411,6 +429,10 @@ public:
 	template <class InputIt>
 	void					insert( iterator pos, InputIt first, InputIt last )
 	{
+		if (first == last)
+		{
+			return ;
+		}
 		if (pos == end())
 		{
 			while (first != last)
@@ -421,18 +443,85 @@ public:
 		}
 		else
 		{
-			// AAAAAAAAAAAAHHHH
+			size_type		dist;
+			iterator		copy_pos = pos;
+
+			dist = iter_distance(first, last);
+			if (_size + dist <= _capacity)
+			{
+				for (size_type i = 0; i < dist; i++)
+				{
+					_allocation.construct(_array + (_size + (dist - i)), *(end() - (i + 1)));
+				}
+				while (first != last)
+				{
+					_allocation.construct(pos, *first);
+					pos++;
+					first++;
+				}
+				_size += dist;
+			}
+			else if (_size + dist < _capacity * 2)
+			{
+				reserve(_capacity * 2);
+				insert(pos, first, last);
+			}
+			else
+			{
+				reserve(_size + dist);
+				insert(pos, first, last);
+			}
 		}
 	}
 
 	iterator				erase( iterator pos )
 	{
-		// DO STUFF HERE WITH ITERATORS
+		if (pos == end() - 1)
+		{
+			pop_back();
+			return end();
+		}
+		else
+		{
+			iterator	ret = pos;
+			while (pos != end())
+			{
+				_allocation.construct(pos, *(++pos));
+			}
+			return ret;
+		}
 	}
 
 	iterator				erase( iterator first, iterator last )
 	{
-		// DO STUFF HERE WITH ITERATORS
+		size_type	len;
+			
+		len = iter_distance(first, last);
+		if (last == end())
+		{
+			for (size_type i = 0; i < len; i++)
+			{
+				pop_back();
+			}
+			return end();
+		}
+		else
+		{
+			iterator	ret = first;
+			while (last != end())
+			{
+				*first = *last;
+				first++;
+				last++;
+			}
+			while (len > 0)
+			{
+				_size--;
+				_allocation.destroy(&(_array[_size]));
+				len--;
+			}
+			return ret;
+		}
 	}
 
 	void					swap( vector & other )
@@ -466,10 +555,10 @@ public:
 	{
 		for (size_t i = 0; i < _size; i++)
 			_allocation.destroy(_array + i);
-		_allocation.deallocate(_array, _capacity);
-		_array = NULL;
+		// _allocation.deallocate(_array, _capacity);
+		// _array = NULL;
 		_size = 0;
-		_capacity = 0;
+		// _capacity = 0;
 	}
 
  /*     _    _     _     ___   ____    _  _____ ___  ____  
@@ -499,7 +588,7 @@ bool		operator==( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
 	if (lhs._size == rhs._size)
 	{
 		// possibility of replacing that by std::equal(lhs.begin(), lhs.end(), rhs.begin())
-		for (size_type i = 0; i < lhs._size; i++)
+		for (size_t i = 0; i < lhs._size; i++)
 		{
 			if (lhs._array[i] != rhs._array[i])
 				return false;
@@ -522,7 +611,7 @@ template <class T, class Alloc>
 bool		operator<( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
 {
 	//possibility of replacing by std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())
-	size_type	i = 0;
+	size_t	i = 0;
 
 	while (i < lhs._size)
 	{

@@ -12,11 +12,11 @@ namespace ft
 template < class iterator >
 struct iterator_traits
 {
-	typedef iterator::difference_type		difference_type;
-	typedef iterator::value_type			value_type;
-	typedef iterator::pointer				pointer;
-	typedef iterator::reference				reference;
-	typedef iterator::iterator_category		iterator_category;
+	typedef typename iterator::difference_type		difference_type;
+	typedef typename iterator::value_type			value_type;
+	typedef typename iterator::pointer				pointer;
+	typedef typename iterator::reference				reference;
+	typedef typename iterator::iterator_category		iterator_category;
 };
 
 // Specialization in order to use iterator operations on raw pointers
