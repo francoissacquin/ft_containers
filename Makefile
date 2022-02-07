@@ -4,10 +4,12 @@ CC = clang++
 
 SRCS = ./vector_main.cpp
 
-INC = vector/equal.hpp \
- vector/lexicographical.hpp \
- vector/random_access_iterator.hpp \
- vector/vector.hpp
+INC = ./vector/equal.hpp \
+ ./vector/lexicographical_compare.hpp \
+ ./vector/random_access_iterator.hpp \
+ ./vector/vector.hpp \
+ ./vector/is_integral.hpp \
+ ./vector/enable_if.hpp
 
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -I.

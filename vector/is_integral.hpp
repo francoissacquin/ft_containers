@@ -11,8 +11,8 @@ struct	integral_constant
 	static const T						value = v;
 	typedef T							value_type;
 	typedef integral_constant<T, v>		type;
-	const	operator	T() { return v; };
-}
+	operator	T() { return v; };
+};
 
 // During compilation, we instantiate an integral_constant as true-type to represent the bool value "true"
 typedef		integral_constant<bool, true> true_type;
@@ -21,9 +21,9 @@ typedef		integral_constant<bool, true> true_type;
 typedef		integral_constant<bool, false> false_type;
 
 // This is so that any type that ISN'T all the following true_type polymorphism will be considered false
-template <class T>	struct	is_integral: public false_type{};
+template <class T>	struct	is_integral: public false_type {};
 
-template <class T>	struct	is_integral<const T>: public is_integral<T>;
+template <class T>	struct	is_integral<const T>: public is_integral<T> {};
 
 template<>	struct	is_integral<unsigned char> : public true_type {};
 template<>	struct	is_integral<unsigned short> : public true_type {};

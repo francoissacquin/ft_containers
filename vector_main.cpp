@@ -1,8 +1,12 @@
 #include "./vector/vector.hpp"
 #include <iostream>
+#include <time.h>
+#include <stdlib.h>
 
 int main()
 {
+	srand(time(0));
+
 	// Default constructor
 	{
 		std::cout << "|||------------------------------ Default constructor -------------------------------|||" << std::endl;
@@ -235,7 +239,7 @@ int main()
 	{
 		std::cout << "|||------------------------------ Bracket Element Access[] ----------------------------|||" << std::endl;
 		ft::vector<int>		temp;
-		std::cout << "Creating a fill constructed vector called temp with size 10..." << std::endl;
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
 		for (int i = 0; i < 10; i++)
 			temp.push_back(i * 10);
 		std::cout << "Displaying vector : ";
@@ -263,7 +267,7 @@ int main()
 	{
 		std::cout << "|||----------------------------- vector.at() Element Access ---------------------------|||" << std::endl;
 		ft::vector<int>		temp;
-		std::cout << "Creating a fill constructed vector called temp with size 10..." << std::endl;
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
 		for (int i = 0; i < 10; i++)
 			temp.push_back(i * 10);
 		std::cout << "Displaying vector : ";
@@ -306,7 +310,7 @@ int main()
 	{
 		std::cout << "|||------------------------- front() and back() Element Access ------------------------|||" << std::endl;
 		ft::vector<int>		temp;
-		std::cout << "Creating a fill constructed vector called temp with size 10..." << std::endl;
+		std::cout << "Creating a default constructed vector called temp..." << std::endl;
 		for (int i = 0; i < 10; i++)
 			temp.push_back(i * 10);
 		std::cout << "Displaying vector : ";
@@ -321,6 +325,257 @@ int main()
 		std::cout << "temp.back() = "<< temp.back() << std::endl;
 		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
 		std::cout << std::endl << std::endl;
+	}
+
+	// Assign modifier
+	{
+		std::cout << "|||--------------------------------- Assign() Modifier --------------------------------|||" << std::endl;
+		ft::vector<int>		temp;
+		{
+			ft::vector<int>		cool;
+			cool.assign(7, 100);
+		}
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+
+
+		std::cout << "Creating a default constructed vector called temp_2 ..." << std::endl;
+		ft::vector<int>		temp_2;
+		std::cout << "Assigning the end half of temp to temp_2 through iterators ..." << std::endl;
+		temp_2.assign(temp.begin() + (temp.size() / 2), temp.end());
+		std::cout << "Displaying vector temp_2: ";
+		for (unsigned long i = 0; i < temp_2.size(); i++)
+		{
+			std::cout << temp_2[i];
+			if (i != temp_2.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+
+
+		std::cout << "Creating a default constructed vector called temp_3 ..." << std::endl;
+		ft::vector<int>		temp_3;
+		std::cout << "Assigning a size of 15 with value 64 to temp_3 ..." << std::endl;
+		temp_3.assign(15, 64);
+		std::cout << "Displaying vector temp_3: ";
+		for (unsigned long i = 0; i < temp_3.size(); i++)
+		{
+			std::cout << temp_3[i];
+			if (i != temp_3.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	// push_back() and pop_back()
+	{
+		std::cout << "|||------------------------ push_back() and pop_back() Modifier -----------------------|||" << std::endl;
+		ft::vector<int>		temp;
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
+		std::cout << "Trying to pop_back an empty vector : " << std::endl;
+		std::cout << "temp.popback()" << std::endl;
+		temp.pop_back();
+		std::cout << std::endl;
+		std::cout << "Adding 20 random values with push_back : " << std::endl;
+		for (int i = 0; i < 20; i++)
+			temp.push_back(rand() % 100);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Size of vector is " << temp.size() << std::endl;
+		std::cout << "Removing 15 random values with pop_back : " << std::endl;
+		for (int i = 0; i < 15; i++)
+			temp.pop_back();
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "New size of vector is " << temp.size() << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	// Insert
+	{
+		std::cout << "|||--------------------------------- Insert() Modifier --------------------------------|||" << std::endl;
+		ft::vector<int>		temp;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "Inserting value -5 in position 2, 5 and 8..." << std::endl;
+		temp.insert(temp.begin() + 2, -5);
+		temp.insert(temp.begin() + 5, -5);
+		temp.insert(temp.begin() + 8, -5);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "Inserting 5 times value 32 in position 6..." << std::endl;
+		temp.insert(temp.begin() + 6, 5, 32);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "Creating a default constructed vector called insert_vector ..." << std::endl;
+		ft::vector<int>		insert_vector;
+		insert_vector.assign(8, 0);
+		std::cout << "Displaying insert_vector : ";
+		for (unsigned long i = 0; i < insert_vector.size(); i++)
+		{
+			std::cout << insert_vector[i];
+			if (i != insert_vector.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Inserting insert_vector inside temp using iterators at position 7..." << std::endl;
+		temp.insert(temp.begin() + 7, insert_vector.begin(), insert_vector.end());
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	// Erase
+	{
+		std::cout << "|||--------------------------------- Erase() Modifier ---------------------------------|||" << std::endl;
+		ft::vector<int>		temp;
+		for (int i = 0; i < 20; i++)
+			temp.push_back(i * 10);
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "Erasing elements in positions 14, 8 and 3 ..." << std::endl;
+		temp.erase(temp.begin() + 14);
+		temp.erase(temp.begin() + 8);
+		temp.erase(temp.begin() + 3);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "Erasing all elements between begin() + 2 and end() - 2 ..." << std::endl;
+		temp.erase(temp.begin() + 2, temp.end() - 2);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	// Swap
+	{
+		std::cout << "|||--------------------------------- Swap() Modifier ---------------------------------|||" << std::endl;
+		std::cout << "Creating 2 vectors with different sizes and elements ..." << std::endl;
+		ft::vector<int>		temp;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		ft::vector<int>		temp_2;
+		for (int i = 0; i < 15; i++)
+			temp_2.push_back((i + 1) * -5);
+		std::cout << "Displaying vector 1 : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector 2 : ";
+		for (unsigned long i = 0; i < temp_2.size(); i++)
+		{
+			std::cout << temp_2[i];
+			if (i != temp_2.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "Creating 4 iterators, 2 begin() iterators and 2 end() iterators for each vector ..." << std::endl;
+		ft::random_access_iterator<int>		temp_begin = temp.begin();
+		ft::random_access_iterator<int>		temp_end = temp.end();
+		ft::random_access_iterator<int>		temp_2_begin = temp_2.begin();
+		ft::random_access_iterator<int>		temp_2_end = temp_2.end();
+		std::cout << "vector 1 begin     = " << *temp_begin << std::endl;
+		std::cout << "vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
+		std::cout << "vector 2 begin     = " << *temp_2_begin << std::endl;
+		std::cout << "vector 2 end() - 1 = " << *(temp_2_end - 1) << std::endl;
+		std::cout << std::endl;
+		std::cout << "Swapping vector 1 and vector 2 :  temp.swap(temp_2)" << std::endl;
+		temp.swap(temp_2);
+		std::cout << "Displaying vector 1 : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector 2 : ";
+		for (unsigned long i = 0; i < temp_2.size(); i++)
+		{
+			std::cout << temp_2[i];
+			if (i != temp_2.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "vector 1 begin     = " << *temp_begin << std::endl;
+		std::cout << "vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
+		std::cout << "vector 2 begin     = " << *temp_2_begin << std::endl;
+		std::cout << "vector 2 end() - 1 = " << *(temp_2_end - 1) << std::endl;
 	}
 
 	return 0;

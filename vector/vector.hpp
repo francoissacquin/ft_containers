@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
+#include "enable_if.hpp"
+#include "is_integral.hpp"
+
 
 #include <iostream>
 
@@ -318,7 +321,7 @@ public:
 	}
 
 	template <class InputIt>
-	void					assign( InputIt first, InputIt last )
+	void					assign( InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = NULL )
 	{
 		size_t		len;
 
@@ -403,38 +406,43 @@ public:
 		}
 		else
 		{
-			if (_size + count <= _capacity)
+			if (_size + count < _capacity)
 			{
-				iterator	copy_pos = pos;
-				iterator	copy_end = end();
 				size_type		end_diff;
-				
+				size_type		start_diff;
+				size_type		k;
+
 				end_diff = ft::iter_distance(pos, end());
-				for (size_type i = 0; i < end_diff; i--)
+				start_diff = ft::iter_distance(begin(), pos);
+				k = 0;
+				for (size_type i = end_diff; i > 0; i--)
 				{
-					_allocation.construct( _array + _size + (count - i), *(copy_end() - (i + 1)));
+					_allocation.construct( _array + (_size + (count - 1) - k), *(end() - (k + 1)));
+					k++;
 				}
 				for (size_type j = 0; j < count; j++)
 				{
-					_allocation.construct( copy_pos + j, value);
+					_allocation.construct( _array + start_diff + j, value);
 				}
 				_size += count;
 			}
 			else if (_size + count < _capacity * 2)
 			{
+				size_type	len = ft::iter_distance(begin(), pos);
 				reserve(_capacity * 2);
-				insert(pos, count, value);
+				insert(begin() + len, count, value);
 			}
 			else
 			{
+				size_type	len = ft::iter_distance(begin(), pos);
 				reserve(_size + count);
-				insert(pos, count, value);
+				insert(begin() + len, count, value);
 			}
 		}
 	}
 
 	template <class InputIt>
-	void					insert( iterator pos, InputIt first, InputIt last )
+	void					insert( iterator pos, InputIt first, InputIt last, typename ft::enable_if<!ft::is_integral<InputIt>::value, InputIt>::type* = NULL  )
 	{
 		if (first == last)
 		{
@@ -450,33 +458,43 @@ public:
 		}
 		else
 		{
-			size_type		dist;
-			iterator		copy_pos = pos;
+			size_type		count;
 
-			dist = iter_distance(first, last);
-			if (_size + dist <= _capacity)
+			count = iter_distance(first, last);
+			if (_size + count <= _capacity)
 			{
-				for (size_type i = 0; i < dist; i++)
+				size_type		end_diff;
+				size_type		start_diff;
+				size_type		k;
+
+				end_diff = ft::iter_distance(pos, end());
+				start_diff = ft::iter_distance(begin(), pos);
+				k = 0;
+				for (size_type i = end_diff; i > 0; i--)
 				{
-					_allocation.construct(_array + (_size + (dist - i)), *(end() - (i + 1)));
+					_allocation.construct( _array + (_size + (count - 1) - k), *(end() - (k + 1)));
+					k++;
 				}
+				k = 0;
 				while (first != last)
 				{
-					_allocation.construct(pos, *first);
-					pos++;
+					_allocation.construct(_array + start_diff + k, *first);
 					first++;
+					k++;
 				}
-				_size += dist;
+				_size += count;
 			}
-			else if (_size + dist < _capacity * 2)
+			else if (_size + count < _capacity * 2)
 			{
+				size_type	len = ft::iter_distance(begin(), pos);
 				reserve(_capacity * 2);
-				insert(pos, first, last);
+				insert(begin() + len, first, last);
 			}
 			else
 			{
-				reserve(_size + dist);
-				insert(pos, first, last);
+				size_type	len = ft::iter_distance(begin(), pos);
+				reserve(_size + count);
+				insert(begin() + len, first, last);
 			}
 		}
 	}
@@ -491,10 +509,13 @@ public:
 		else
 		{
 			iterator	ret = pos;
+			size_type	len = ft::iter_distance(begin(), pos);
 			while (pos != end())
 			{
-				_allocation.construct(pos, *(++pos));
+				_allocation.construct(_array + len, *(++pos));
+				len++;
 			}
+			_size--;
 			return ret;
 		}
 	}
