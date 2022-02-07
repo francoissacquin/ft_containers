@@ -87,6 +87,8 @@ public:
 	{
 		this->clear();
 		_allocation.deallocate(_array, _capacity);
+		_array = NULL;
+		_capacity = 0;
 	}
 
 	//OPERATOR OVERLOAD//
@@ -96,6 +98,8 @@ public:
 		{
 			this->clear();
 			_allocation.deallocate(_array, _capacity);
+			_array = NULL;
+			_capacity = 0;
 			_size = rhs._size;
 			_capacity = rhs._capacity;
 			_array = _allocation.allocate(_capacity);
@@ -209,9 +213,11 @@ public:
 		{
 			if (n > _max_size)
 				throw std::length_error("vector");
-			vector<value_type> copy(*this);
+			ft::vector<value_type> copy(*this);
 			this->clear();
 			_allocation.deallocate(_array, _capacity);
+			_array = NULL;
+			_capacity = 0;
 			_size = copy._size;
 			_max_size = _allocation.max_size();
 			_capacity = n;
@@ -220,8 +226,6 @@ public:
 			{
 				_allocation.construct(_array + i, copy[i]);
 			}
-			copy.clear();
-			copy._allocation.deallocate(_array, _capacity);
 		}
 	}
 
@@ -295,6 +299,8 @@ public:
 		{
 			this->clear();
 			_allocation.deallocate(_array, _capacity);
+			_array = NULL;
+			_capacity = 0;
 			_size = n;
 			_capacity = n;
 			_array = _allocation.allocate(_capacity);
@@ -323,6 +329,8 @@ public:
 		{
 			this->clear();
 			_allocation.deallocate(_array, _capacity);
+			_array = NULL;
+			_capacity = 0;
 			_size = len;
 			_capacity = len;
 			_array = _allocation.allocate(_capacity);
@@ -357,7 +365,6 @@ public:
 		}
 		_allocation.construct(_array + _size, value);
 		_size = _size + 1;
-		
 	}
 
 	void					pop_back( void )
@@ -555,10 +562,7 @@ public:
 	{
 		for (size_t i = 0; i < _size; i++)
 			_allocation.destroy(_array + i);
-		// _allocation.deallocate(_array, _capacity);
-		// _array = NULL;
 		_size = 0;
-		// _capacity = 0;
 	}
 
  /*     _    _     _     ___   ____    _  _____ ___  ____  

@@ -25,9 +25,9 @@ int main()
 	{
 		std::cout << "|||------------------------------- Range constructor --------------------------------|||" << std::endl;
 		ft::vector<int>		temp;
+		std::cout << "cool" << std::endl;
 		for (int i = 0; i < 10; i++)
 			temp.push_back(i * 10);
-
 		std::cout << "Displaying original vector          : ";
 		for (unsigned long i = 0; i < temp.size(); i++)
 		{
@@ -50,6 +50,7 @@ int main()
 		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
 		std::cout << std::endl << std::endl;
 	}
+
 
 	// Copy constuctor
 	{
@@ -129,9 +130,9 @@ int main()
 		for (int i = 0; i < 10; i++)
 			temp.push_back(i * 10);
 		std::cout << "temp.begin() = " << *(temp.begin()) << std::endl;
-		std::cout << "temp.end() = " << *(temp.end()) << std::endl;
+		std::cout << "temp.end() - 1 = " << *(temp.end() - 1) << std::endl;
 		std::cout << "temp.rbegin() = " << *(temp.rbegin()) << std::endl;
-		std::cout << "temp.rend() = " << *(temp.rend()) << std::endl;
+		std::cout << "temp.rend() - 1 = " << *(temp.rend() - 1) << std::endl;
 		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
 		std::cout << std::endl << std::endl;
 	}
@@ -233,11 +234,93 @@ int main()
 	// Bracket element access
 	{
 		std::cout << "|||------------------------------ Bracket Element Access[] ----------------------------|||" << std::endl;
-		ft::vector<int>		temp(10);
+		ft::vector<int>		temp;
 		std::cout << "Creating a fill constructed vector called temp with size 10..." << std::endl;
 		for (int i = 0; i < 10; i++)
 			temp.push_back(i * 10);
-		
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector elements through brackets : " << std::endl;
+		std::cout << "temp[3] = "<< temp[3] << std::endl;
+		std::cout << "temp[9] = "<< temp[9] << std::endl;
+		std::cout << "temp[2] = "<< temp[2] << std::endl;
+		std::cout << "temp[6] = "<< temp[6] << std::endl;
+		std::cout << "Displaying incorrect vector elements through brackets : " << std::endl;
+		std::cout << "size of the vector = " << temp.size() << std::endl;
+		std::cout << "temp[50] = "<< temp[50] << std::endl;
+		std::cout << "temp[-5] = "<< temp[-5] << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	// at() function
+	{
+		std::cout << "|||----------------------------- vector.at() Element Access ---------------------------|||" << std::endl;
+		ft::vector<int>		temp;
+		std::cout << "Creating a fill constructed vector called temp with size 10..." << std::endl;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector elements through at() member function: " << std::endl;
+		std::cout << "temp.at(3) = "<< temp.at(3) << std::endl;
+		std::cout << "temp.at(9) = "<< temp.at(9) << std::endl;
+		std::cout << "temp.at(2) = "<< temp.at(2) << std::endl;
+		std::cout << "temp.at(6) = "<< temp.at(6) << std::endl;
+		std::cout << "Displaying incorrect vector elements through at() member function: " << std::endl;
+		std::cout << "Displaying incorrect vector elements through brackets : " << std::endl;
+		std::cout << "size of the vector = " << temp.size() << std::endl;
+		try
+		{
+			std::cout << "temp.at(50) = "<< temp.at(50) << std::endl;
+		}
+		catch (std::exception & error)
+		{
+			std::cout << "Error out_of_range returned for " << error.what() << std::endl;
+		}
+		try
+		{
+			std::cout << "temp.at(-5) = "<< temp.at(-5) << std::endl;
+		}
+		catch (std::exception & error)
+		{
+			std::cout << "Error out_of_range returned for " << error.what() << std::endl;
+		}
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	// Front() and Back() Element Access
+	{
+		std::cout << "|||------------------------- front() and back() Element Access ------------------------|||" << std::endl;
+		ft::vector<int>		temp;
+		std::cout << "Creating a fill constructed vector called temp with size 10..." << std::endl;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "temp.front() = "<< temp.front() << std::endl;
+		std::cout << "temp.back() = "<< temp.back() << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
 	}
 
 	return 0;
