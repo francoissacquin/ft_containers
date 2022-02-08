@@ -513,7 +513,7 @@ int main()
 			if (i != temp.size() - 1)
 				std::cout << ", ";
 		}
-		std::cout << std::endl << std::endl;
+		std::cout << std::endl;
 		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
 		std::cout << std::endl << std::endl;
 	}
@@ -576,6 +576,73 @@ int main()
 		std::cout << "vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
 		std::cout << "vector 2 begin     = " << *temp_2_begin << std::endl;
 		std::cout << "vector 2 end() - 1 = " << *(temp_2_end - 1) << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	// Clear
+	{
+		std::cout << "|||--------------------------------- Clear() Modifier ---------------------------------|||" << std::endl;
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
+		ft::vector<int>		temp;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Vector size = " << temp.size() << std::endl;
+		std::cout << std::endl;
+		std::cout << "Clearing the contents of vector ..." << std::endl;
+		temp.clear();
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Vector size = " << temp.size() << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
+	//get_allocator
+	{
+		std::cout << "|||----------------------------- Get_allocator() Modifier -----------------------------|||" << std::endl;
+		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
+		ft::vector<int>		temp;
+		temp.assign(10, 0);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Deconstructing and constructing memory through get_allocator() (destroying index 1, 5 and 7 and constructing value 7 on top) and displaying the result" << std::endl;
+		temp.get_allocator().destroy(&temp[5]);
+		temp.get_allocator().construct(&temp[5], 7);
+		temp.get_allocator().destroy(&temp[1]);
+		temp.get_allocator().construct(&temp[1], 7);
+		temp.get_allocator().destroy(&temp[7]);
+		temp.get_allocator().construct(&temp[7], 7);
+		std::cout << "Displaying vector : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
 	}
 
 	return 0;
