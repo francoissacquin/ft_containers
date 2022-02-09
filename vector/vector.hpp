@@ -610,12 +610,12 @@ public:
 template <class T, class Alloc>
 bool		operator==( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
 {
-	if (lhs._size == rhs._size)
+	if (lhs.size() == rhs.size())
 	{
 		// possibility of replacing that by std::equal(lhs.begin(), lhs.end(), rhs.begin())
-		for (size_t i = 0; i < lhs._size; i++)
+		for (size_t i = 0; i < lhs.size(); i++)
 		{
-			if (lhs._array[i] != rhs._array[i])
+			if (lhs[i] != rhs[i])
 				return false;
 		}
 		return true;
@@ -638,15 +638,15 @@ bool		operator<( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
 	//possibility of replacing by std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())
 	size_t	i = 0;
 
-	while (i < lhs._size)
+	while (i < lhs.size())
 	{
-		if (i == rhs._size || rhs._array[i] < lhs._array[i])
+		if (i == rhs.size() || rhs[i] < lhs[i])
 			return false;
-		else if (lhs._array[i] < rhs._array[i])
+		else if (lhs[i] < rhs[i])
 			return true;
 		i++;
 	}
-	return (i != rhs._size);
+	return (i != rhs.size());
 }
 
 template <class T, class Alloc>

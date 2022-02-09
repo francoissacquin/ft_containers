@@ -645,6 +645,57 @@ int main()
 		std::cout << std::endl << std::endl;
 	}
 
+	// Relational Operators
+	{
+		std::cout << "|||------------------------------- Relational Operators -------------------------------|||" << std::endl;
+		std::cout << "Creating 3 default constructed vectors called temp, temp_2 and temp_copy ..." << std::endl;
+		ft::vector<int>		temp;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		ft::vector<int>		temp_2;
+		for (int i = 0; i < 12; i++)
+			temp_2.push_back((i + 1) * -5);
+		ft::vector<int>		temp_copy(temp);
+		std::cout << "Displaying vector temp : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector temp_2: ";
+		for (unsigned long i = 0; i < temp_2.size(); i++)
+		{
+			std::cout << temp_2[i];
+			if (i != temp_2.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector temp_copy : ";
+		for (unsigned long i = 0; i < temp_copy.size(); i++)
+		{
+			std::cout << temp_copy[i];
+			if (i != temp_copy.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "temp == temp_2    -> " << (temp == temp_2) << std::endl;
+		std::cout << "temp == temp_copy -> " << (temp == temp_copy) << std::endl;
+		std::cout << "temp != temp_2    -> " << (temp != temp_2) << std::endl;
+		std::cout << "temp != temp_copy -> " << (temp != temp_copy) << std::endl;
+		std::cout << "temp < temp_2     -> " << (temp < temp_2) << std::endl;
+		std::cout << "temp < temp_copy  -> " << (temp < temp_copy) << std::endl;
+		std::cout << "temp <= temp_2    -> " << (temp <= temp_2) << std::endl;
+		std::cout << "temp <= temp_copy -> " << (temp <= temp_copy) << std::endl;
+		std::cout << "temp > temp_2     -> " << (temp > temp_2) << std::endl;
+		std::cout << "temp > temp_copy  -> " << (temp > temp_copy) << std::endl;
+		std::cout << "temp >= temp_2    -> " << (temp >= temp_2) << std::endl;
+		std::cout << "temp >= temp_copy -> " << (temp >= temp_copy) << std::endl;
+		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
+		std::cout << std::endl << std::endl;
+	}
+
 	return 0;
 
 
