@@ -13,7 +13,7 @@ namespace ft
 template < typename T >
 class random_access_iterator: iterator < random_access_iterator_tag, T >
 {
-private:
+protected:
 	T*		_ptr;
 
 public:
@@ -54,7 +54,7 @@ public:
 	}
 
 	//ASSIGNATION OPERATION OVERLOAD
-	reference					operator=( const random_access_iterator & rhs )
+	random_access_iterator &	operator=( const random_access_iterator & rhs )
 	{
 		if (this != &rhs)
 		{
@@ -135,9 +135,9 @@ public:
 	}
 
 	//OFFSET DEREFERENCE OFFSET OPERATOR
-	random_access_iterator		operator[]( difference_type n )
+	reference		operator[]( difference_type n )
 	{
-		return _ptr[n];
+		return *(_ptr + n);
 	}
 
 	//BASE FUNCTION FOR NON-MEMBER FUNCTIONS TO GET ACCESS TO _ptr
@@ -154,6 +154,7 @@ bool				operator==( const random_access_iterator<T> & lhs, const random_access_i
 	return (lhs.base() == rhs.base());
 }
 
+//POLYMORPHISM FRO ITERATOR VS CONST ITERATOR COMPARISONS
 template<typename T_lhs, typename T_rhs>
 bool				operator==( const random_access_iterator<T_lhs> & lhs, const random_access_iterator<T_rhs> & rhs )
 {
@@ -178,8 +179,20 @@ bool				operator<( const random_access_iterator<T> & lhs, const random_access_it
 	return (lhs.base() < rhs.base());
 }
 
+template<typename T_lhs, typename T_rhs>
+bool				operator<( const random_access_iterator<T_lhs> & lhs, const random_access_iterator<T_rhs> & rhs )
+{
+	return (lhs.base() < rhs.base());
+}
+
 template<typename T>
 bool				operator<=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs )
+{
+	return (lhs.base() <= rhs.base());
+}
+
+template<typename T_lhs, typename T_rhs>
+bool				operator<=( const random_access_iterator<T_lhs> & lhs, const random_access_iterator<T_rhs> & rhs )
 {
 	return (lhs.base() <= rhs.base());
 }
@@ -190,10 +203,41 @@ bool				operator>( const random_access_iterator<T> & lhs, const random_access_it
 	return (lhs.base() > rhs.base());
 }
 
+template<typename T_lhs, typename T_rhs>
+bool				operator>( const random_access_iterator<T_lhs> & lhs, const random_access_iterator<T_rhs> & rhs )
+{
+	return (lhs.base() > rhs.base());
+}
+
 template<typename T>
 bool				operator>=( const random_access_iterator<T> & lhs, const random_access_iterator<T> & rhs )
 {
 	return (lhs.base() >= rhs.base());
+}
+
+template<typename T_lhs, typename T_rhs>
+bool				operator>=( const random_access_iterator<T_lhs> & lhs, const random_access_iterator<T_rhs> & rhs )
+{
+	return (lhs.base() >= rhs.base());
+}
+
+// Operation overloads for additions and substractions
+template <typename T>
+random_access_iterator<T>		operator+( typename random_access_iterator<T>::difference_type n, typename ft::random_access_iterator<T> & rhs )
+{
+	return (rhs + n);
+}
+
+template <typename T>
+typename random_access_iterator<T>::difference_type		operator-( const random_access_iterator<T> lhs, const random_access_iterator<T> rhs )
+{
+	return (lhs.base() - rhs.base());
+}
+
+template <typename T_lhs, typename T_rhs>
+typename random_access_iterator<T_lhs>::difference_type		operator-( const random_access_iterator<T_lhs> lhs, const random_access_iterator<T_rhs> rhs )
+{
+	return (lhs.base() - rhs.base());
 }
 
 // FUNCTION THAT REIMPLEMENTS STD::DISTANCE() FOR THE VECTOR MEMBER TYPES FUNCTIONS WHO USE RANDOM_ACCESS_ITERATORS

@@ -1,4 +1,4 @@
-#include "./vector/vector.hpp"
+#include "./vector.hpp"
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
@@ -549,10 +549,10 @@ int main()
 		ft::random_access_iterator<int>		temp_end = temp.end();
 		ft::random_access_iterator<int>		temp_2_begin = temp_2.begin();
 		ft::random_access_iterator<int>		temp_2_end = temp_2.end();
-		std::cout << "vector 1 begin     = " << *temp_begin << std::endl;
-		std::cout << "vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
-		std::cout << "vector 2 begin     = " << *temp_2_begin << std::endl;
-		std::cout << "vector 2 end() - 1 = " << *(temp_2_end - 1) << std::endl;
+		std::cout << "iterator 1 = vector 1 begin     = " << *temp_begin << std::endl;
+		std::cout << "iterator 2 = vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
+		std::cout << "iterator 3 = vector 2 begin     = " << *temp_2_begin << std::endl;
+		std::cout << "iterator 4 = vector 2 end() - 1 = " << *(temp_2_end - 1) << std::endl;
 		std::cout << std::endl;
 		std::cout << "Swapping vector 1 and vector 2 :  temp.swap(temp_2)" << std::endl;
 		temp.swap(temp_2);
@@ -572,10 +572,10 @@ int main()
 				std::cout << ", ";
 		}
 		std::cout << std::endl << std::endl;
-		std::cout << "vector 1 begin     = " << *temp_begin << std::endl;
-		std::cout << "vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
-		std::cout << "vector 2 begin     = " << *temp_2_begin << std::endl;
-		std::cout << "vector 2 end() - 1 = " << *(temp_2_end - 1) << std::endl;
+		std::cout << "iterator 1 = " << *temp_begin << std::endl;
+		std::cout << "iterator 2 = " << *(temp_end - 1) << std::endl;
+		std::cout << "iterator 3 = " << *temp_2_begin << std::endl;
+		std::cout << "iterator 4 = " << *(temp_2_end - 1) << std::endl;
 		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
 		std::cout << std::endl << std::endl;
 	}
@@ -696,50 +696,65 @@ int main()
 		std::cout << std::endl << std::endl;
 	}
 
+	// Non-member swap()
+	{
+		std::cout << "|||-------------------------------- Non-member swap() --------------------------------|||" << std::endl;
+		std::cout << "Creating 2 vectors with different sizes and elements ..." << std::endl;
+		ft::vector<int>		temp;
+		for (int i = 0; i < 10; i++)
+			temp.push_back(i * 10);
+		ft::vector<int>		temp_2;
+		for (int i = 0; i < 15; i++)
+			temp_2.push_back((i + 1) * -5);
+		std::cout << "Displaying vector 1 : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector 2 : ";
+		for (unsigned long i = 0; i < temp_2.size(); i++)
+		{
+			std::cout << temp_2[i];
+			if (i != temp_2.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "Creating 4 iterators, 2 begin() iterators and 2 end() iterators for each vector ..." << std::endl;
+		ft::random_access_iterator<int>		temp_begin = temp.begin();
+		ft::random_access_iterator<int>		temp_end = temp.end();
+		ft::random_access_iterator<int>		temp_2_begin = temp_2.begin();
+		ft::random_access_iterator<int>		temp_2_end = temp_2.end();
+		std::cout << "iterator 1 = vector 1 begin     = " << *temp_begin << std::endl;
+		std::cout << "iterator 2 = vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
+		std::cout << "iterator 3 = vector 2 begin     = " << *temp_2_begin << std::endl;
+		std::cout << "iterator 4 = vector 2 end() - 1 = " << *(temp_2_end - 1) << std::endl;
+		std::cout << std::endl;
+		std::cout << "Swapping vector 1 and vector 2 :  swap(temp, temp_2)" << std::endl;
+		swap(temp, temp_2);
+		std::cout << "Displaying vector 1 : ";
+		for (unsigned long i = 0; i < temp.size(); i++)
+		{
+			std::cout << temp[i];
+			if (i != temp.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl;
+		std::cout << "Displaying vector 2 : ";
+		for (unsigned long i = 0; i < temp_2.size(); i++)
+		{
+			std::cout << temp_2[i];
+			if (i != temp_2.size() - 1)
+				std::cout << ", ";
+		}
+		std::cout << std::endl << std::endl;
+		std::cout << "iterator 1 = " << *temp_begin << std::endl;
+		std::cout << "iterator 2 = " << *(temp_end - 1) << std::endl;
+		std::cout << "iterator 3 = " << *temp_2_begin << std::endl;
+		std::cout << "iterator 4 = " << *(temp_2_end - 1) << std::endl;
+	}
+
 	return 0;
-
-
-	// temp.push_back(2);
-	// temp.push_back(3);
-	// temp.push_back(4);
-	// temp.resize(10);
-	// for (unsigned long i = 0; i < temp.size(); i++)
-	// 	std::cout << "Temp[" << i << "] = " << temp[i] << std::endl;
-	// return 0;
-
-
-	// ft::vector<int> temp(0);
-	// std::allocator<int> temp_alloc;
-	// ft::random_access_iterator<int>	it;
-
-	// for (int i = 1; i <= 10; i++)
-	// {
-	// 	temp.push_back(i * 10);
-	// }
-	// it = temp.begin();
-
-	// //TESTING INSERT WITH > _MAX_SIZE
-	// //std::cout << temp_alloc.max_size() << std::endl;
-	// //temp.insert(it, 2305843009213693953, 0);
-
-	// //TESTING DESTROY WITH THE ALLOCATOR
-	// //temp_alloc.destroy(&(temp[4]));
-	// temp_alloc.construct(&(temp[4]), 2);
-	// //temp.erase(temp.begin() + 3);
-	// //temp.pop_back();
-
-	// // DISPLAYING TEMP VECTOR
-	// for (unsigned long i = 0; i < temp.size(); i++)
-	// 	std::cout << "Temp[" << i << "] = " << temp[i] << std::endl;
-
-	// std::cout << std::endl;
-
-	// //TESTING ITERATOR DEREFERENCING
-	// std::vector<int>::iterator ptr = temp.begin();
-	// std::cout << *ptr << std::endl;
-	// *ptr++ = 25;
-	// std::cout << *ptr << std::endl;
-	// for (unsigned long i = 0; i < temp.size(); i++)
-	// 	std::cout << "Temp[" << i << "] = " << temp[i] << std::endl;
-	// return (0);
 }
