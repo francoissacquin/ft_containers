@@ -8,7 +8,7 @@
 namespace ft
 {
 
-template <typename Iterator>
+template <class Iterator>
 class reverse_iterator
 {
 protected:
@@ -32,13 +32,8 @@ public:
 		//nothing here
 	}
 
-	reverse_iterator( const reverse_iterator & src ): _current(src._current)
-	{
-		//nothing here
-	}
-
-	template<typename Iter>
-	reverse_iterator( const reverse_iterator<Iter> & x ): _current(x._current)
+	template<class U>
+	reverse_iterator( const reverse_iterator<U> & x ): _current(x.base())
 	{
 		//nothing here
 	}
@@ -50,15 +45,15 @@ public:
 	}
 
 	//ASSIGNATION OPERATOR OVERLOAD
-	template<typename Iter>
-	reverse_iterator	operator=( const reverse_iterator<Iter> & rhs )
-	{
-		if (this != &rhs)
-		{
-			_current = rhs.base();
-		}
-		return *this;
-	}
+	// template<class Iter>
+	// reverse_iterator	operator=( const reverse_iterator<Iter> & rhs )
+	// {
+	// 	if (reinterpret_cast< const void * >(this) != reinterpret_cast< const void * >(&rhs))
+	// 	{
+	// 		_current = rhs.base();
+	// 	}
+	// 	return *this;
+	// }
 
 	//DEREFERENCING AS AN RVALUE
 	reference		operator*( void ) const
@@ -137,6 +132,12 @@ public:
 	{
 		return _current;
 	}
+
+	//ALLOWING COMPARISON BETWEEN CONST AND NON-CONST REVERSE_ITERATOR
+	operator reverse_iterator<const Iterator> () const
+	{
+		return (reverse_iterator<const Iterator>(_current));
+	}
 };
 
 // NON-MEMBER EQUALITY/INEQUALITY COMPARISONS AND FUNCTIONS FOR 2 REVERSE_ITERATORS
@@ -155,25 +156,25 @@ bool			operator!=(const reverse_iterator<Iterator> & lhs, const reverse_iterator
 template<typename Iterator>
 bool			operator<(const reverse_iterator<Iterator> & lhs, const reverse_iterator<Iterator> & rhs)
 {
-	return (lhs.base() < rhs.base());
+	return (lhs.base() > rhs.base());
 }
 
 template<typename Iterator>
 bool			operator<=(const reverse_iterator<Iterator> & lhs, const reverse_iterator<Iterator> & rhs)
 {
-	return (lhs.base() <= rhs.base());
+	return (!(rhs < lhs));
 }
 
 template<typename Iterator>
 bool			operator>(const reverse_iterator<Iterator> & lhs, const reverse_iterator<Iterator> & rhs)
 {
-	return (lhs.base() > rhs.base());
+	return (rhs < lhs);
 }
 
 template<typename Iterator>
 bool			operator>=(const reverse_iterator<Iterator> & lhs, const reverse_iterator<Iterator> & rhs)
 {
-	return (lhs.base() >= rhs.base());
+	return (!(lhs < rhs));
 }
 
 // NON-MEMBER EQUALITY/INEQUALITY COMPARISONS AND FUNCTIONS FOR A REVERSE_ITERATOR AND A CONST REVERSE ITERATOR
@@ -192,43 +193,43 @@ bool			operator!=(const reverse_iterator<Iter_lhs> & lhs, const reverse_iterator
 template<typename Iter_lhs, typename Iter_rhs>
 bool			operator<(const reverse_iterator<Iter_lhs> & lhs, const reverse_iterator<Iter_rhs> & rhs)
 {
-	return (lhs.base() < rhs.base());
+	return (lhs.base() > rhs.base());
 }
 
 template<typename Iter_lhs, typename Iter_rhs>
 bool			operator<=(const reverse_iterator<Iter_lhs> & lhs, const reverse_iterator<Iter_rhs> & rhs)
 {
-	return (lhs.base() <= rhs.base());
+	return (!(rhs < lhs));
 }
 
 template<typename Iter_lhs, typename Iter_rhs>
 bool			operator>(const reverse_iterator<Iter_lhs> & lhs, const reverse_iterator<Iter_rhs> & rhs)
 {
-	return (lhs.base() > rhs.base());
+	return (rhs < lhs);
 }
 
 template<typename Iter_lhs, typename Iter_rhs>
 bool			operator>=(const reverse_iterator<Iter_lhs> & lhs, const reverse_iterator<Iter_rhs> & rhs)
 {
-	return (lhs.base() >= rhs.base());
+	return (!(lhs < rhs));
 }
 
 template<class Iterator>
 reverse_iterator<Iterator>								operator+(typename reverse_iterator<Iterator>::difference_type n, const reverse_iterator<Iterator> & x)
 {
-	return reverse_iterator<Iterator>(x.base() - n);
+	return (reverse_iterator<Iterator>(x.base() - n));
 }
 
 template<typename Iterator>
 typename reverse_iterator<Iterator>::difference_type	operator-(const reverse_iterator<Iterator> & x, const reverse_iterator<Iterator> & y)
 {
-	return y.base() - x.base();
+	return (y.base() - x.base());
 }
 
 template<typename Iter_lhs, typename Iter_rhs>
 typename reverse_iterator<Iter_lhs>::difference_type	operator-(const reverse_iterator<Iter_lhs> & x, const reverse_iterator<Iter_rhs> & y)
 {
-	return y.base() - x.base();
+	return (y.base() - x.base());
 }
 
 } // end of namespace ft

@@ -64,7 +64,7 @@ public:
 	}
 
 	template <class InputIterator>
-	vector( InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type()): _max_size(alloc.max_size()), _allocation(alloc)
+	vector( InputIterator first, InputIterator last, const allocator_type & alloc = allocator_type(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type* = NULL): _max_size(alloc.max_size()), _allocation(alloc)
 	{
 		_capacity = ft::iter_distance(first, last);
 		_size = _capacity;
@@ -501,23 +501,7 @@ public:
 
 	iterator				erase( iterator pos )
 	{
-		if (pos == end() - 1)
-		{
-			pop_back();
-			return end();
-		}
-		else
-		{
-			iterator	ret = pos;
-			size_type	len = ft::iter_distance(begin(), pos);
-			while (pos != end())
-			{
-				_allocation.construct(_array + len, *(++pos));
-				len++;
-			}
-			_size--;
-			return ret;
-		}
+		return (erase(pos, pos + 1));
 	}
 
 	iterator				erase( iterator first, iterator last )
