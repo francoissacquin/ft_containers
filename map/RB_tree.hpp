@@ -4,6 +4,17 @@
 namespace ft
 {
 
+struct Node
+{
+	pair	data;
+	Node	*parent;
+	Node	*left;
+	Node	*right;
+	bool	color; // 1 = Red, 0 = Black;
+};
+
+typedef	Node	*NodePtr;
+
 
 
 
