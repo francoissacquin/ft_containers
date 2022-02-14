@@ -7,11 +7,13 @@ namespace ft
 template <class T1, class T2>
 struct pair
 {
-private:
-	T1		_first;
-	T2		_second;
 
-public:
+	typedef T1		first_type;
+	typedef T2		_second;
+
+	first_type		_first;
+	second_type		_second;
+
 	//CONSTRUCTORS//
 	pair(): _first(), _second()
 	{
@@ -40,30 +42,20 @@ public:
 		return *this;
 	}
 
-	T1			get_first( void ) //is this needed?
-	{
-		return _first;
-	}
-
-	T2			get_second( void ) // is this needed?
-	{
-		return _second;
-	}
-
 }; // end of struct pair
 
 //MAKE PAIR
 template < class T1, class T2 >
-ft::pair<T1, T2>		make_pair( T1 t, T2 u )
+ft::pair<T1, T2>		make_pair( T1 x, T2 y )
 {
-	return pair<T1, T2>(t, u);
+	return pair<T1, T2>(x, y);
 }
 
 // RELATIONAL OPERATORS
 template < class T1, class T2 >
 bool					operator==( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 {
-	if (lhs.get_first() == rhs.get_first() && lhs.get_second() == rhs.get_second())
+	if (lhs._first == rhs._first && lhs._second == rhs._second)
 		return true;
 	return false;
 }
@@ -77,9 +69,25 @@ bool					operator!=( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 template < class T1, class T2 >
 bool					operator<( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 {
-	if (!(lhs.get_first() < rhs.get_first()))
-		return (lhs.get_second() < rhs.get_second());
-	return (lhs.get_first() < rhs.get_first())
+	return lhs._first < rhs._first || (!(rhs._first < lhs._first) && lhs.second < rhs._second);
+}
+
+template < class T1, class T2 >
+bool					operator<=( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
+{
+	return (!(rhs < lhs));
+}
+
+template < class T1, class T2 >
+bool					operator>( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
+{
+	return (rhs < lhs);
+}
+
+template < class T1, class T2 >
+bool					operator>=( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
+{
+	return (!(lhs < rhs));
 }
 
 } // end of namespace
