@@ -3,6 +3,7 @@
 
 #include "./pair.hpp"
 #include <iostream>
+#include <string>
 
 namespace ft
 {
@@ -22,7 +23,7 @@ public:
 
 	bool	operator==( const Node & rhs )
 	{
-		return (value._first == rhs.value._first);
+		return (this->data == rhs.data);
 	}
 
 	Node &	operator=( const Node & rhs )
@@ -46,16 +47,16 @@ class RB_tree
 {
 public:
 
-	typedef Key											key_type;
-	typedef T											mapped_type;
-	typedef ft::pair<const Key, T>						value_type;
-	typedef Compare										key_compare;
-	typedef Node<value_type>							node;
-	typedef Alloc										allocator_type;
+	typedef Key												key_type;
+	typedef T												mapped_type;
+	typedef ft::pair<const Key, T>							value_type;
+	typedef Compare											key_compare;
+	typedef Node<value_type>								node;
+	typedef Alloc											allocator_type;
 	// typedef iterator
-	typedef size_t										size_type;
-	typedef Alloc::template rebind<node>::other			node_allocator_type;
-	typedef	Node *										NodePtr;
+	typedef size_t											size_type;
+	typedef typename Alloc::template rebind<node>::other	node_allocator_type;
+	typedef	node *											NodePtr;
 	// the rebind<type> of std::allocator gives usaccess to its member type "other" which serves as allocator for elements of type <type>
 
 
@@ -66,7 +67,7 @@ public:
 		_TNULL->right = NULL;
 		_TNULL->left = NULL;
 		_TNULL->color = 0;
-		root = TNULL;
+		_root = _TNULL;
 	}
 
 
@@ -190,7 +191,7 @@ public:
 		y->parent = x->parent;
 		if (x->parent == NULL)
 		{
-			this->root = y;
+			this->_root = y;
 		}
 		else if (x == x->parent->right)
 		{
@@ -210,11 +211,11 @@ public:
 		NodePtr		new_node;
 		
 		new_node = _node_alloc.allocate(1);
-		_pair_alloc.construct(new_node->data, d);
+		_pair_alloc.construct(&(new_node->data), d);
 		new_node->parent = NULL;
-		node->left = _TNULL;
-		node->right = _TNULL;
-		node->color = 1; // new node must be red
+		new_node->left = _TNULL;
+		new_node->right = _TNULL;
+		new_node->color = 1; // new node must be red
 
 		NodePtr 	y = NULL;
 		NodePtr 	x = this->_root;
@@ -232,7 +233,7 @@ public:
 			}
 		}
 
-		// so we have x at the bottom of the tree ( as TNULL ) and y as its parent
+		// so we have x at the bottom of the tree ( as _TNULL ) and y as its parent
 		// so we know we can place the new_node  with y as its parent
 		new_node->parent = y;
 		if (y == NULL) // in case the tree is empty
@@ -281,8 +282,8 @@ public:
 	// CA C'EST POUR FAIRE JOLI, ON VERRA POUR L'ENLEVER PLUS TARD
 	void		print_tree( void )
 	{
-		if (root != TNULL)
-			print_helper(this->root, "", true);
+		if (_root != _TNULL)
+			print_helper(this->_root, "", true);
 	}
 
 
@@ -298,9 +299,9 @@ private:
 
 	NodePtr		search_tree_helper(NodePtr n, value_type k)
 	{
-		if (n == TNULL || k == n->data) // if current node is empty or k is equal to current node data we return root
+		if (n == _TNULL || k == n->data) // if current node is empty or k is equal to current node data we return root
 		{
-			return root;
+			return n;
 		}
 		if (k < n->data) // we progress throught he tree by comapring data values, in case the data is a pair, the pair operator overloads compare key first
 		{
@@ -316,9 +317,13 @@ private:
 	{
 		NodePtr		s;
 
+		// THIS GIANT LOOP IS CASE 3 : X is a black node
+		// Deleting a black node violates property number 5 (All paths must have the same number of black nodes)
+		// So we add an extra black node to the deleted node to make a "double black node" and try to convert this back to a single node
+		// There are 8 cases for this (4 cases and there mirrors): 3.1, 3.2, 3.3 and 3.4
 		while (x != _root && x->color == 0)
 		{
-			if (x == x->parent->left)
+			if (x == x->parent->left) // if() brackets that encapsulate cases 3.1, 3.2, 3.3 and 3.4 in the case where x is a LEFT child
 			{
 				s = x->parent->right; // We make S the right neighbor of X
 				if (s->color == 1) // CASE 3.1 DELETION : X's sibling S is red
@@ -337,26 +342,226 @@ private:
 				{
 					if (s->right->color == 0) // CASE 3.3 DELETION: S is black, S's left child is black and S's right child is black
 					{
-						s->left->color = 0;
+						s->left->color = 0; // Switching color between S and S's left child
 						s->color = 1;
-						right_rotate(s);
-						s = x->parent->right;
+						right_rotate(s); // performing a right rotation on S
+						s = x->parent->right; // S becomes X's right sibling to prepare for next case
+					}// We end up with a 3.4 case
+					// CASE 3.4 DELETION : X's sibling S is black and S's right child is red (terminal case)
+					s->color = x->parent->color; // S takes on X's parent color so that we can change the parent to black
+					x->parent->color = 0; // We change X's parent to black
+					s->right->color = 0; // We change S's right child to black
+					left_rotate(x->parent); // And then we perform a left rotation on X's parent to reequilibrate the tree.
+					x = _root; // this causes the new x value to become the root of the tree;
+				}
+			}
+			else //cases 3.1, 3.2, 3.3 and 3.4 in the case where x is a RIGHT child (same as above but right and left are inverted)
+			{
+				s = x->parent->left;
+				if (s->color == 1) // CASE 3.1 DELETION
+				{
+					s->color = 0;
+					x->parent->color = 1;
+					right_rotate(x->parent);
+					s = x->parent->left;
+				}
+				if (s->right->color == 0 && s->right->color == 0) // CASE 3.2 DELETION
+				{
+					s->color = 1;
+					x = x->parent;
+				}
+				else
+				{
+					if (s->left->color == 0) // CASE 3.3 DELETION
+					{
+						s->right->color = 0;
+						s->color = 1;
+						left_rotate(s);
+						s = x->parent->left;
 					}
-
+					//CASE 3.4 DELETION
+					s->color = x->parent->color;
+					x->parent->color = 0;
+					s->left->color = 0;
+					right_rotate(x->parent);
+					x = _root;
 				}
 			}
 		}
-
+		x->color = 0;
 	}
 
+	void	rb_transplant(NodePtr u, NodePtr v)
+	{
+		if (u->parent == NULL) // Case where u is _root
+		{
+			_root = v; // We make v the root
+		}
+		else if (u == u->parent->left) // case where u is a left_child
+		{
+			u->parent->left = v; // we replace u with v as left_child of its parent
+		}
+		else // case where u is a right_child
+		{
+			u->parent->right = v; // we replace u with v as right_child of its parent
+		}
+		v->parent = u->parent;
+	}
 
+	void		delete_node_helper(NodePtr n, value_type k)
+	{
+		// first we try to find the node corresponding to the pair k
+		NodePtr		z = _TNULL;
+		NodePtr		x;
+		NodePtr		y;
 
-}
+		while (n != _TNULL)
+		{
+			if (n->data == k)
+			{
+				z = n;
+			}
+			if (n->data <= k)
+			{
+				n = n->right;
+			}
+			else
+			{
+				n = n->left;
+			}
+		}
 
+		if (z == _TNULL)
+		{
+			return ;
+		}
 
+		y = z;
+		int		y_original_color = y->color;
+		if (z->left == _TNULL)
+		{
+			x = z->right;
+			rb_transplant(z, z->right);
+		}
+		else if (z->right == _TNULL)
+		{
+			x = z->left;
+			rb_transplant(z, z->left);
+		}
+		else
+		{
+			y = minimum(z->right);
+			y_original_color = y->color;
+			x = y->right;
+			if (y->parent == z)
+			{
+				x->parent = y;
+			}
+			else
+			{
+				rb_transplant(y, y->right);
+				y->right = z->right;
+				y->right->parent = y;
+			}
+			rb_transplant(z, y);
+			y->left = z->left;
+			y->left->parent = y;
+			y->color = z->color;
+		}
+		_pair_alloc.destroy(z->data);
+		_node_alloc.deallocate(z);
+		if (y_original_color == 0)
+			fix_delete(x);
+	}
 
+	//fixing the red black tree after insertion of new node
+	void		fix_insert(NodePtr k)
+	{
+		NodePtr		u;
 
+		//All following cases are sub-cases of case 3 where P (parent) of the inserted node is red
+		// We will refer to the subtree nodes with the letters S (sibling), P (parent), U (uncle) and G (grandparent)
+		while (k->parent->color == 1)
+		{
+			if (k->parent == k->parent->parent->right)
+			{
+				u = k->parent->parent->left; //uncle
+				if (u->color == 1) // CASE 3.1 INSERTION: P is red and U is red too
+				{
+					u->color = 0;
+					k->parent->color = 0;
+					k->parent->parent->color = 1;
+					k = k->parent->parent;
+				}
+				else // case 3.2.1 and case 3.2.2 following from case 3.2 where P is red and U is black (or NULL)
+				{
+					if (k == k->parent->left) // CASE 3.2.2: triangle case where P is right child of G and K is left child of P
+					{
+						k = k->parent;
+						right_rotate(k);
+					}
+					//CASE 3.2.1 : line situation between G, P and the new node
+					k->parent->color = 0;
+					k->parent->parent->color = 1;
+					left_rotate(k->parent->parent);
+				}
+			}
+			else // And here we solve mirror case 3.1 and mirror cases of 3.2.1, 3.2.2 (these are 3.2.3 and 3.2.4) 
+			{
+				u = k->parent->parent->right; // uncle
+				if (u->color == 1) //Mirror CASE of 3.1
+				{
+					u->color = 0;
+					k->parent->color = 0;
+					k ->parent->parent->color = 1;
+					k = k->parent->parent;
+				}
+				else
+				{
+					if (k == k->parent->right) //Mirror case of 3.2.2 (CASE 3.2.4)
+					{
+						k = k->parent;
+						left_rotate(k);
+					}
+					//Mirror CASE of 3.2.1 (Case 3.2.3)
+					k->parent->color = 0;
+					k->parent->parent->color = 1;
+					right_rotate(k->parent->parent);
+				}
+			}
+			if (k == _root)
+			{
+				break;
+			}
+		}
+		_root->color = 0;
+	}
 
-} // end of namespace
+	void		print_helper(NodePtr root, std::string indent, bool last)
+	{
+		// displaying the tree structure on the screen
+		if (root != _TNULL)
+		{
+			std::cout << indent;
+			if (last)
+			{
+				std::cout << "R----";
+				indent += "     ";
+			}
+			else
+			{
+				std::cout << "L----";
+				indent += "|    ";
+			}
+			std::string	sColor = root->color?"RED":"BLACK";
+			std::cout << _root->data << "(" << sColor << ")" << std::endl;
+			print_helper(root->left, indent, false);
+			print_helper(root->right, indent, true);
+		}
+	}
+
+};
+
+}; // end of namespace
 
 #endif

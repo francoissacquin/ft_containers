@@ -1,6 +1,8 @@
 #ifndef PAIR_HPP
 # define PAIR_HPP
 
+#include <iostream>
+
 namespace ft
 {
 
@@ -9,7 +11,7 @@ struct pair
 {
 
 	typedef T1		first_type;
-	typedef T2		_second;
+	typedef T2		second_type;
 
 	first_type		_first;
 	second_type		_second;
@@ -69,7 +71,7 @@ bool					operator!=( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 template < class T1, class T2 >
 bool					operator<( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 {
-	return lhs._first < rhs._first || (!(rhs._first < lhs._first) && lhs.second < rhs._second);
+	return lhs._first < rhs._first || (!(rhs._first < lhs._first) && lhs._second < rhs._second);
 }
 
 template < class T1, class T2 >
@@ -88,6 +90,13 @@ template < class T1, class T2 >
 bool					operator>=( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 {
 	return (!(lhs < rhs));
+}
+
+template < class T1, class T2 >
+std::ostream &			operator<<( std::ostream & o, const ft::pair<T1, T2>& rhs)
+{
+	o << rhs._first << "|-|" << rhs._second;
+	return o;
 }
 
 } // end of namespace
