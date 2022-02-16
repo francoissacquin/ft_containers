@@ -3,9 +3,7 @@
 
 #include <memory>
 #include <stdexcept>
-
-
-#include <iostream>
+#include "./map/RB_tree.hpp"
 
 namespace ft
 {
@@ -14,10 +12,9 @@ template < typename Key, typename T, typename Compare = less<Key>, typename Allo
 class map
 {
 private:
-	//Alloc				_allocation;
-	//key_compare		_compare;
-	//tree				_tree_I_m_gonna_use;
-	//
+	Alloc									_allocation;
+	key_compare							_comparison;
+	RB_tree<Key, T, Compare, Alloc>		_rb_tree;
 
 public:
 	//MEMBER TYPES
@@ -27,7 +24,6 @@ public:
 	typedef	std::size_t									size_type;
 	typedef	std::ptrdiff_t								difference_type;
 	typedef	Compare										key_compare;
-	typedef //value compare nested class???
 	typedef	Alloc										allocator_type;
 	typedef	typename allocator_type::reference			reference;
 	typedef	typename allocator_type::const_reference	const_reference;
@@ -46,13 +42,13 @@ public:
     |_|  |_|_____|_|  |_|____/|_____|_| \_\ |_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/ */
 
 	//CONSTRUCTORS//
-	explicit map( const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type() )
+	explicit map( const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type()): _comparison(comp), _allocation(alloc)
 	{
 		//nothing here
 	}
 
 	template <class InputIterator>
-	map( InputIterator first, InputIterator last, const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type() )
+	map( InputIterator first, InputIterator last, const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type()): _comparison(comp), _allocation(alloc)
 	{
 		//nothing here
 	}

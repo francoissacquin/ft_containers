@@ -4,7 +4,12 @@ int main()
 {
 	ft::RB_tree<int, char>		bst;
 
-	for (int i = 100; i > 0; i--)
+	for (int i = 0; i < 100; i+=2)
+	{
+		ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
+		bst.insert(temp);
+	}
+	for (int i = 1; i < 100; i+=2)
 	{
 		ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
 		bst.insert(temp);

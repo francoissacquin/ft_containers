@@ -589,7 +589,7 @@ private:
 				std::cout << "L---------";
 				indent += "|         ";
 			}
-			std::string	sColor = root->color?"RED":"BLACK";
+			std::string	sColor = root->color?"\033[1;31mRED\033[0m":"\033[1;37mBLACK\033[0m";
 			std::cout << root->data << "(" << sColor << ")" << std::endl;
 			print_helper(root->left, indent, false);
 			print_helper(root->right, indent, true);
