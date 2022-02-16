@@ -95,7 +95,7 @@ bool					operator>=( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 template < class T1, class T2 >
 std::ostream &			operator<<( std::ostream & o, const ft::pair<T1, T2>& rhs)
 {
-	o << rhs._first << "|-|" << rhs._second;
+	o << rhs._first << "|" << rhs._second;
 	return o;
 }
 

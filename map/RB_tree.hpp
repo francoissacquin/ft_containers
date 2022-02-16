@@ -70,6 +70,15 @@ public:
 		_root = _TNULL;
 	}
 
+	~RB_tree( void )
+	{
+		while (_root != _TNULL)
+		{
+			delete_node(_root->data);
+		}
+		_node_alloc.deallocate(_TNULL, 1);
+	}
+
 
 	// // Pre-Order traversal : Node -> left sub-tree -> right sub-tree
 	// void		pre_order()
@@ -275,7 +284,7 @@ public:
 
 	void		delete_node(value_type d)
 	{
-		delete_node_helper(this->root, d);
+		delete_node_helper(this->_root, d);
 	}
 
 
@@ -284,6 +293,33 @@ public:
 	{
 		if (_root != _TNULL)
 			print_helper(this->_root, "", true);
+	}
+
+	void		nb_black_nodes_all_leaves_paths( void )
+	{
+		int		nb_black_nodes;
+
+		nb_black_nodes = 0;
+		count_nodes(nb_black_nodes, _root);
+	}
+
+	void		count_nodes( int nb_black_nodes, NodePtr n)
+	{
+		if (n->color == 0)
+			nb_black_nodes++;
+		if (n->left == _TNULL && n->right == _TNULL)
+		{
+			std::cout << "Path to leaf [ " << n->data << " ] contains " << nb_black_nodes << " black nodes." << std::endl;
+			return ;
+		}
+		if (n->left != _TNULL)
+		{
+			count_nodes(nb_black_nodes, n->left);
+		}
+		if (n->right != _TNULL)
+		{
+			count_nodes(nb_black_nodes, n->right);
+		}
 	}
 
 
@@ -415,7 +451,7 @@ private:
 		NodePtr		x;
 		NodePtr		y;
 
-		while (n != _TNULL)
+		while (n != _TNULL) // while loop where we search for value_type k
 		{
 			if (n->data == k)
 			{
@@ -468,8 +504,8 @@ private:
 			y->left->parent = y;
 			y->color = z->color;
 		}
-		_pair_alloc.destroy(z->data);
-		_node_alloc.deallocate(z);
+		_pair_alloc.destroy(&(z->data));
+		_node_alloc.deallocate(z, 1);
 		if (y_original_color == 0)
 			fix_delete(x);
 	}
@@ -545,16 +581,16 @@ private:
 			std::cout << indent;
 			if (last)
 			{
-				std::cout << "R----";
-				indent += "     ";
+				std::cout << "R---------";
+				indent += "          ";
 			}
 			else
 			{
-				std::cout << "L----";
-				indent += "|    ";
+				std::cout << "L---------";
+				indent += "|         ";
 			}
 			std::string	sColor = root->color?"RED":"BLACK";
-			std::cout << _root->data << "(" << sColor << ")" << std::endl;
+			std::cout << root->data << "(" << sColor << ")" << std::endl;
 			print_helper(root->left, indent, false);
 			print_helper(root->right, indent, true);
 		}
