@@ -72,33 +72,54 @@ public:
 
 	~RB_tree( void )
 	{
+		delete_all_nodes();
+		_node_alloc.deallocate(_TNULL, 1);
+	}
+
+	void			initialize_TNULL( void )
+	{
+		_TNULL = _node_alloc.allocate(1);
+		_TNULL->right = NULL;
+		_TNULL->left = NULL;
+		_TNULL->color = 0;
+	}
+
+	RB_tree &		operator=( const RB_tree & rhs )
+	{
+		if (this != &rhs)
+		{
+			clear();
+			initialize_TNULL();
+			_root = _TNULL;
+			in_order_tree_fill(rhs.get_root());
+		}
+		return *this;
+	}
+
+	void			clear( void )
+	{
+		delete_all_nodes();
+		_node_alloc.deallocate(_TNULL, 1);
+	}
+
+	void	delete_all_nodes( void )
+	{
 		while (_root != _TNULL)
 		{
 			delete_node(_root->data);
 		}
-		_node_alloc.deallocate(_TNULL, 1);
 	}
 
-
-	// // Pre-Order traversal : Node -> left sub-tree -> right sub-tree
-	// void		pre_order()
-	// {
-	// 	pre_order_helper(this->_root);
-	// }
-
-
-	// // In-Order traversal : left sub-tree -> Node -> right sub-tree
-	// void		in_order()
-	// {
-	// 	in_order_helper(this->_root)
-	// }
-
-
-	// // Post-Order traversal : left sub-tree -> right sub-tree -> Node
-	// void		post_order()
-	// {
-	// 	post_order_helper(this->_root)
-	// }
+	void	in_order_tree_fill(NodePtr n)
+	{
+		if (n == _TNULL)
+		{
+			return ;
+		}
+		insert(n->data);
+		in_order_tree_fill(n->left);
+		in_order_tree_fill(n->right);
+	}
 
 
 	// searching the tree for k key and returning the corresponding node
@@ -322,6 +343,10 @@ public:
 		}
 	}
 
+	NodePtr		get_root( void )
+	{
+		return _root;
+	}
 
 
 private:

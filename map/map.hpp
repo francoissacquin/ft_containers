@@ -12,9 +12,10 @@ template < typename Key, typename T, typename Compare = less<Key>, typename Allo
 class map
 {
 private:
-	Alloc									_allocation;
+	Alloc								_allocation;
 	key_compare							_comparison;
 	RB_tree<Key, T, Compare, Alloc>		_rb_tree;
+	//size_type							_size; // is _size necessary?
 
 public:
 	//MEMBER TYPES
@@ -50,20 +51,18 @@ public:
 	template <class InputIterator>
 	map( InputIterator first, InputIterator last, const key_compare & comp = key_compare(), const allocator_type & alloc = allocator_type()): _comparison(comp), _allocation(alloc)
 	{
-		//nothing here
+		insert(first, last);
 	}
 
-	map( const map & src )
+	map( const map & src ): _comparison(src._comparison)
 	{
-		// A REMPLIR
+		_tree = src._tree;
 	}
 
 	//DESTRUCTORS//
 	~map( void )
 	{
-		this->clear();
-		_allocation.deallocate();
-		// METTRE lES POINTEURS A NULL
+		// nothing here
 	}
 
 	//OPERATOR OVERLOAD//
@@ -71,9 +70,26 @@ public:
 	{
 		if (this != &rhs)
 		{
-			// A REMPLIR
+			_tree = rhs._tree;
 		}
 		return *this;
+	}
+
+
+  /* ___ _____ _____ ____      _  _____ ___  ____  ____  
+	|_ _|_   _| ____|  _ \    / \|_   _/ _ \|  _ \/ ___| 
+	 | |  | | |  _| | |_) |  / _ \ | || | | | |_) \___ \ 
+	 | |  | | | |___|  _ <  / ___ \| || |_| |  _ < ___) |
+	|___| |_| |_____|_| \_\/_/   \_\_| \___/|_| \_\____/ */
+
+	iterator		begin( void )
+	{
+		//nothing here;
+	}
+
+	const_iterator	begin( void )
+	{
+		//nothing here
 	}
 
 
