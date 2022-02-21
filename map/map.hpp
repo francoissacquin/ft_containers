@@ -62,7 +62,7 @@ public:
 	//DESTRUCTORS//
 	~map( void )
 	{
-		// nothing here
+		_tree.clear();
 	}
 
 	//OPERATOR OVERLOAD//
@@ -84,13 +84,134 @@ public:
 
 	iterator		begin( void )
 	{
-		//nothing here;
+		return iterator(_tree.begin());
 	}
 
-	const_iterator	begin( void )
+	const_iterator	begin( void ) const
 	{
-		//nothing here
+		return const_iterator(_tree.begin());
 	}
+
+	iterator		end( void )
+	{
+		return iterator(_tree.end());
+	}
+
+	const_iterator	end( void ) const
+	{
+		return const_iterator(_tree.end());
+	}
+
+	reverse_iterator		rbegin( void )
+	{
+		return reverse_iterator(_tree.end());
+	}
+
+	const_reverse_iterator	rbegin( void ) const
+	{
+		return const_reverse_iterator(_tree.end());
+	}
+
+	reverse_iterator		rend( void )
+	{
+		return reverse_iterator(_tree.begin());
+	}
+
+	const_reverse_iterator		rend( void ) const
+	{
+		return const_reverse_iterator(_tree.begin());
+	}
+
+
+  /*  ____    _    ____   _    ____ ___ _______   __
+	 / ___|  / \  |  _ \ / \  / ___|_ _|_   _\ \ / /
+	| |     / _ \ | |_) / _ \| |    | |  | |  \ V / 
+	| |___ / ___ \|  __/ ___ \ |___ | |  | |   | |  
+	 \____/_/   \_\_| /_/   \_\____|___| |_|   |_|  */
+
+	bool				empty( void ) const
+	{
+		if (_tree.get_Size() == 0)
+			return true;
+		return false;
+	}
+
+	size_type			size( void ) const
+	{
+		return _tree.get_Size();
+	}
+
+	size_type			max_size( void ) const
+	{
+		return _tree.get_Max_Size();
+	}
+
+
+  /* _____ _     _____ __  __ _____ _   _ _____      _    ____ ____ _____ ____ ____  
+	| ____| |   | ____|  \/  | ____| \ | |_   _|    / \  / ___/ ___| ____/ ___/ ___| 
+	|  _| | |   |  _| | |\/| |  _| |  \| | | |     / _ \| |  | |   |  _| \___ \___ \ 
+	| |___| |___| |___| |  | | |___| |\  | | |    / ___ \ |__| |___| |___ ___) |__) |
+	|_____|_____|_____|_|  |_|_____|_| \_| |_|   /_/   \_\____\____|_____|____/____/  */
+
+	mapped_type &		operator[](const key_type & k)
+	{
+		// a faire plus tard
+	}
+
+
+  /* __  __  ___  ____ ___ _____ ___ _____ ____  ____  
+	|  \/  |/ _ \|  _ \_ _|  ___|_ _| ____|  _ \/ ___| 
+	| |\/| | | | | | | | || |_   | ||  _| | |_) \___ \ 
+	| |  | | |_| | |_| | ||  _|  | || |___|  _ < ___) |
+	|_|  |_|\___/|____/___|_|   |___|_____|_| \_\____/ */
+
+	pair<iterator, bool>	insert( const value_type & val)
+	{
+		return _tree.insert(val);
+	}
+
+	iterator				insert( iterator pos, const value_type & val)
+	{
+		return insert(val)._first;
+	}
+
+	template <class InputIterator>
+	void					insert( InputIterator first, InputIterator last )
+	{
+		while (first != last)
+		{
+			insert(*first);
+			first++;
+		}
+	}
+
+	void					erase( iterator pos)
+	{
+		// a voir avec l'iterator
+	}
+
+	size_type				erase( const key_type & k )
+	{
+		// a voir
+	}
+
+	void					erase( iterator first, iterator last)
+	{
+		// passer un vector de key_type si necessaire
+	}
+
+	void					swap( map & x)
+	{
+		// AAAAAHHH
+	}
+
+	void					clear( void )
+	{
+		_tree.clear();
+	}
+
+	// A REMPLIR AVEC OBSERVERS EN ASCII
+
 
 
 }; //end of map class

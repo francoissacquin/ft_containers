@@ -91,7 +91,7 @@ public:
 			clear();
 			initialize_TNULL();
 			_root = _TNULL;
-			in_order_tree_fill(rhs.get_root());
+			in_order_tree_fill(rhs.get_Root());
 		}
 		return *this;
 	}
@@ -126,6 +126,18 @@ public:
 	NodePtr		search_tree(value_type k)
 	{
 		return search_tree_helper(this->_root, k);
+	}
+
+	NodePtr		begin( void )
+	{
+		return this->minimum(_root);
+	}
+
+	NodePtr		end( void )
+	{
+		if (_root == _TNULL)
+			return NULL;
+		return _TNULL;
 	}
 
 
@@ -236,9 +248,10 @@ public:
 	}
 
 
-	void	insert(value_type d)
+	pair<iterator, bool>	insert(value_type d)
 	{
-		NodePtr		new_node;
+		NodePtr					new_node;
+		pair<iterator, bool>	ret;
 		
 		new_node = _node_alloc.allocate(1);
 		_pair_alloc.construct(&(new_node->data), d);
@@ -279,27 +292,42 @@ public:
 			y->right = new_node;
 		}
 
+		_size++;
+		ret._first = iterator(new_node);
+		ret._second = true;
+
 		//if the new_node has become root, we simply return
 		if (new_node->parent == NULL)
 		{
 			new_node->color = 0;
-			return ;
+			return ret;
 		}
 
 		// if the grandparent is null, we simply return ( new_node is a child of _root )
 		if (new_node->parent->parent == NULL)
 		{
-			return ;
+			return ret;
 		}
 
 		// AND NOW LET'S FIX THE TREE
 		fix_insert(new_node);
+		return ret;
 	}
 
 
-	NodePtr		get_root( void )
+	NodePtr		get_Root( void ) const
 	{
 		return this->root;
+	}
+
+	size_type	get_Size( void ) const
+	{
+		return this->_size;
+	}
+
+	size_type	get_Max_Size( void ) const
+	{
+		return _node_alloc.max_size();
 	}
 
 
@@ -313,7 +341,10 @@ public:
 	void		print_tree( void )
 	{
 		if (_root != _TNULL)
+		{
+			std::cout << "Tree contains " << _size << " nodes :" << std::endl;
 			print_helper(this->_root, "", true);
+		}
 	}
 
 	void		nb_black_nodes_all_leaves_paths( void )
@@ -321,10 +352,10 @@ public:
 		int		nb_black_nodes;
 
 		nb_black_nodes = 0;
-		count_nodes(nb_black_nodes, _root);
+		count_black_nodes(nb_black_nodes, _root);
 	}
 
-	void		count_nodes( int nb_black_nodes, NodePtr n)
+	void		count_black_nodes( int nb_black_nodes, NodePtr n)
 	{
 		if (n->color == 0)
 			nb_black_nodes++;
@@ -335,17 +366,12 @@ public:
 		}
 		if (n->left != _TNULL)
 		{
-			count_nodes(nb_black_nodes, n->left);
+			count_black_nodes(nb_black_nodes, n->left);
 		}
 		if (n->right != _TNULL)
 		{
-			count_nodes(nb_black_nodes, n->right);
+			count_black_nodes(nb_black_nodes, n->right);
 		}
-	}
-
-	NodePtr		get_root( void )
-	{
-		return _root;
 	}
 
 
@@ -354,6 +380,7 @@ private:
 	node_allocator_type		_node_alloc;
 	node *					_root;
 	node *					_TNULL;
+	size_type				_size;
 
 	// Pour l'instant pas besoin
 	// void initializeNULLNode(NodePtr node, NodePtr parent) {}
@@ -533,6 +560,7 @@ private:
 		_node_alloc.deallocate(z, 1);
 		if (y_original_color == 0)
 			fix_delete(x);
+		_size--;
 	}
 
 	//fixing the red black tree after insertion of new node
