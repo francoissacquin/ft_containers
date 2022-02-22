@@ -38,7 +38,24 @@ public:
 		}
 		return *this;
 	}
-};
+}; // end of class Node
+
+template < class Arg1, class Arg2, class Result >
+struct binary_function
+{
+	typedef Arg1		first_type;
+	typedef Arg2		second_type;
+	typedef Result		result_type;
+}; // binary function structure to include in the comparison structure
+
+template < class T >
+struct less : binary_function<T, T, bool>
+{
+	bool		operator() ( const T & x, const T & y) const
+	{
+		return (x < y);
+	}
+}
 
 
 // RB_TREE IMPLEMENTATION//
@@ -53,11 +70,11 @@ public:
 	typedef Compare											key_compare;
 	typedef Node<value_type>								node;
 	typedef Alloc											allocator_type;
-	// typedef iterator
+	typedef rb_tree_iterator<value_type, node>				iterator
 	typedef size_t											size_type;
 	typedef typename Alloc::template rebind<node>::other	node_allocator_type;
 	typedef	node *											NodePtr;
-	// the rebind<type> of std::allocator gives usaccess to its member type "other" which serves as allocator for elements of type <type>
+	// the rebind<type> of std::allocator gives us access to its member type "other" which serves as allocator for elements of type <type>
 
 
 	//CONSTRUCTOR//
@@ -123,7 +140,7 @@ public:
 
 
 	// searching the tree for k key and returning the corresponding node
-	NodePtr		search_tree(value_type k)
+	NodePtr		search_tree(key_type k)
 	{
 		return search_tree_helper(this->_root, k);
 	}
@@ -314,6 +331,14 @@ public:
 		return ret;
 	}
 
+	void		erase( key_type k)
+	{
+		if (_root == _TNULL)
+			return ;
+		delete_node(search_tree(k)->data);
+		
+	}
+
 
 	NodePtr		get_Root( void ) const
 	{
@@ -328,6 +353,11 @@ public:
 	size_type	get_Max_Size( void ) const
 	{
 		return _node_alloc.max_size();
+	}
+
+	NodePtr		get_TNULL( void ) const
+	{
+		return _TNULL;
 	}
 
 
@@ -374,6 +404,27 @@ public:
 		}
 	}
 
+	void		swap( const RB_tree & rhs)
+	{
+		allocator_type			temp_pair_alloc = rhs._pair_alloc;
+		node_allocator_type		temp_node_alloc = rhs._node_alloc;
+		node *					temp_root = rhs._root;
+		node *					temp_TNULL = rhs._TNULL;
+		size_type				temp_size = rhs._size;
+
+		rhs._pair_alloc = _pair_alloc;
+		rhs._node_alloc = _node_alloc;
+		rhs._root = _root;
+		rhs._TNULL = _TNULL;
+		rhs._size = _size;
+
+		_pair_alloc = temp_pair_alloc;
+		_node_alloc = temp_node_alloc;
+		_root = temp_root;
+		_TNULL = temp_TNULL;
+		_size = temp_size;
+	}
+
 
 private:
 	allocator_type			_pair_alloc;
@@ -385,13 +436,13 @@ private:
 	// Pour l'instant pas besoin
 	// void initializeNULLNode(NodePtr node, NodePtr parent) {}
 
-	NodePtr		search_tree_helper(NodePtr n, value_type k)
+	NodePtr		search_tree_helper(NodePtr n, key_type k)
 	{
-		if (n == _TNULL || k == n->data) // if current node is empty or k is equal to current node data we return root
+		if (n == _TNULL || k == n->data->first) // if current node is empty or k is equal to current node data we return root
 		{
 			return n;
 		}
-		if (k < n->data) // we progress throught he tree by comapring data values, in case the data is a pair, the pair operator overloads compare key first
+		if (key_compare() (key, n->data->_first)) // we progress throught he tree by comapring data values, in case the data is a pair, the pair operator overloads compare key first
 		{
 			return search_tree_helper(n->left, k);
 		}
@@ -650,6 +701,70 @@ private:
 	}
 
 };
+
+//find the sucessor of a given node
+template<typename T>
+Node<T> *		successor(Node<T> * x)
+{
+	RB_tree		temp;
+	// if the right sub-tree is not null, the successor is the leftmost node in the right sub-tree
+	if (x->right != temp.get_TNULL())
+	{
+		Node<T> *	 y = x->right;
+		while (y->left != temp.get_TNULL())
+			y = y->left;
+		return y;
+	}
+	//else it is the lowest ancestor of x whose left child is also an ancestor of x
+	Node<T> *	 y = x->parent;
+	while (y != temp.get_TNULL() && x == y->right)
+	{
+		x = y;
+		y = y->parent;
+	}
+	return y;
+}
+
+//find the predecessor of a given node
+template<typename T>
+Node<T> *		predecessor(Node<T> * x)
+{
+	RB_tree		temp;
+	// if node given is TNULL, we return NULL
+	if (x->right == temp.get_TNULL())
+	// if the left tree is not null, the predecessor is the right most node in the left sub-tree
+	if (x->left != _TNULL)
+	{
+		Node<T> *	 y = x->right;
+		while (y->right != temp.get_TNULL())
+			y = y->right;
+		return y;
+	}
+	//else it is the highest ancestor of x whose right child is also an ancestor of x
+	Node<T> * y = x->parent;
+	while (y != temp.get_TNULL() && x == y->left)
+	{
+		x = y;
+		y = y->parent;
+	}
+	return y;
+}
+
+// // finding node with minimum key
+// NodePtr		minimum(NodePtr n)
+// {
+// 	while (n->left != _TNULL)
+// 		n = n->left;
+// 	return n;
+// }
+
+
+// NodePtr		maximum(NodePtr n)
+// {
+// 	while (n->right != _TNULL)
+// 		n = n->right;
+// 	return n;
+// }
 
 }; // end of namespace
 

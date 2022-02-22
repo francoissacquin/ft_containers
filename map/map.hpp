@@ -3,7 +3,8 @@
 
 #include <memory>
 #include <stdexcept>
-#include "./map/RB_tree.hpp"
+#include "RB_tree.hpp"
+#include "bidirectional_iterator.hpp"
 
 namespace ft
 {
@@ -19,21 +20,48 @@ private:
 
 public:
 	//MEMBER TYPES
-	typedef	Key											key_type;
-	typedef	T											mapped_type;
-	typedef	pair<const key_type, mapped_type>			value_type;
-	typedef	std::size_t									size_type;
-	typedef	std::ptrdiff_t								difference_type;
-	typedef	Compare										key_compare;
-	typedef	Alloc										allocator_type;
-	typedef	typename allocator_type::reference			reference;
-	typedef	typename allocator_type::const_reference	const_reference;
-	typedef	typename allocator_type::pointer			pointer;
-	typedef	typename allocator_type::const_pointer		const_pointer;
-	// bidirectional iterator
-	// const bidirectional iterator
-	// reverse_iterator
-	// const reverse iterator
+	typedef	Key																key_type;
+	typedef	T																mapped_type;
+	typedef	pair<const key_type, mapped_type>								value_type;
+	typedef	std::size_t														size_type;
+	typedef	std::ptrdiff_t													difference_type;
+	typedef	Compare															key_compare;
+	typedef	Alloc															allocator_type;
+	typedef	typename allocator_type::reference								reference;
+	typedef	typename allocator_type::const_reference						const_reference;
+	typedef	typename allocator_type::pointer								pointer;
+	typedef	typename allocator_type::const_pointer							const_pointer;
+	typedef ft::rb_tree_iterator< value_type, ft::Node<value_type> >		iterator;
+	typedef ft::rb_tree_iterator< const value_type, ft::Node<value_type> >	const_iterator;
+	typedef ft::reverse_iterator<iterator>									reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator>							const_reverse_iterator;
+	
+
+
+	// Nested class of value compare that we can use and return in value_compare member function
+	class value_compare: public binary_function<value_type, value_type, bool>
+	{
+		friend class map;
+
+		protected:
+		key_compare			_comp;
+		
+		value_compare(key_compare c): _comp(c)
+		{
+			// nothing here
+		}
+
+		public:
+
+		typedef bool			result_type;
+		typedef value_type		first_type;
+		typedef	value_type		second_type;
+
+		bool		operator() (const value_type & x, const value_type & y) const
+		{
+			return _comp(x._first, y._first);
+		}
+	}; 
 
 
   /* __  __ _____ __  __ ____  _____ ____    _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
@@ -155,7 +183,7 @@ public:
 
 	mapped_type &		operator[](const key_type & k)
 	{
-		// a faire plus tard
+		return insert(value_type(k, mapped_type()))._first->_second;
 	}
 
 
@@ -172,6 +200,7 @@ public:
 
 	iterator				insert( iterator pos, const value_type & val)
 	{
+		(void)pos;
 		return insert(val)._first;
 	}
 
@@ -187,22 +216,36 @@ public:
 
 	void					erase( iterator pos)
 	{
-		// a voir avec l'iterator
+		_tree.erase(pos._first);
 	}
 
 	size_type				erase( const key_type & k )
 	{
-		// a voir
+		if (count(k))
+		{
+			_tree.erase(k);
+			return 1;
+		}
+		return 0;
 	}
 
 	void					erase( iterator first, iterator last)
 	{
-		// passer un vector de key_type si necessaire
+		ft::vector<key_type>	it_vec(iterator_len(first, last));
+		iterator				temp(first);
+
+		while (temp != last)
+		{
+			it_vec.push_back(temp->_first);
+			temp++;
+		}
+		for (size_t i = 0; i < it_vec.size(); i++)
+			_tree.erase(it_vec[i]);
 	}
 
 	void					swap( map & x)
 	{
-		// AAAAAHHH
+		_tree.swap(_tree);
 	}
 
 	void					clear( void )
@@ -210,7 +253,31 @@ public:
 		_tree.clear();
 	}
 
-	// A REMPLIR AVEC OBSERVERS EN ASCII
+/*	  ___  ____ ____  _____ ______     _______ ____  ____  
+	 / _ \| __ ) ___|| ____|  _ \ \   / / ____|  _ \/ ___| 
+	| | | |  _ \___ \|  _| | |_) \ \ / /|  _| | |_) \___ \ 
+	| |_| | |_) |__) | |___|  _ < \ V / | |___|  _ < ___) |
+	 \___/|____/____/|_____|_| \_\ \_/  |_____|_| \_\____/ */
+
+	key_compare				key_comp() const
+	{
+		return key_compare();
+	}
+
+	value_compare			value_comp() const
+	{
+		return value_compare(key_compare());
+	}
+
+/*	  ___  ____  _____ ____      _  _____ ___ ___  _   _ ____  
+	 / _ \|  _ \| ____|  _ \    / \|_   _|_ _/ _ \| \ | / ___| 
+	| | | | |_) |  _| | |_) |  / _ \ | |  | | | | |  \| \___ \ 
+	| |_| |  __/| |___|  _ <  / ___ \| |  | | |_| | |\  |___) |
+	 \___/|_|   |_____|_| \_\/_/   \_\_| |___\___/|_| \_|____/ */
+
+	 
+
+
 
 
 

@@ -42,11 +42,13 @@ namespace ft
 			// nothing here
 		}
 
+		//CONVERSION TO CONST ITERATOR ALLOWED
 		operator rb_tree_iterator<const T, node>() const
 		{
 			return (rb_tree_iterator<const T, node>(_ptr));
 		}
 
+		//ASSIGNATION OPERATION OVERLOAD
 		rb_tree_iterator &		operator=(const rb_tree_iterator & rhs)
 		{
 			if (this != &rhs)
@@ -54,16 +56,66 @@ namespace ft
 			return *this;
 		}
 
+		//INCREMENTATION
 		rb_tree_iterator &		operator++( void )
 		{
-			if (_ptr->_right != NULL)
-			{
-				_ptr = 
-			}
+			_ptr = successor(_ptr);
+			return *this;
 		}
-	}
 
-}
+		rb_tree_iterator		operator++( int )
+		{
+			rb_tree_iterator	copy(*this);
+
+			_ptr = sucessor(_ptr);
+			return copy;
+		}
+
+		//DECREMENTATION
+		rb_tree_iterator &		operator--( void )
+		{
+			_ptr = predecessor(_ptr);
+			return *this;
+		}
+
+		rb_tree_iterator		operator--( int )
+		{
+			rb_tree_iterator	copy(*this);
+
+			_ptr = predecessor(_ptr);
+			return copy;
+		}
+
+		//DEREFERENCED AS AN RVALUE 
+		reference				operator*( void ) const
+		{
+			return *_ptr;
+		}
+
+		pointer					operator->( void ) const
+		{
+			return _ptr;
+		}
+
+		// COMPARISON OPERATORS
+		bool					operator==( const rb_tree_iterator & rhs)
+		{
+			return (_ptr == rhs._ptr);
+		}
+
+		bool					operator!=( const rb_tree_iterator & rhs)
+		{
+			return (_ptr != rhs._ptr);
+		}
+
+		//BASE FUNCTION FOR NON-MEMBER FUNCTIONS TO GET ACCESS TO _ptr
+		pointer					base( void ) const
+		{
+			return _ptr;
+		}
+	};
+
+}; // end of namespace ft
 
 
 #endif
