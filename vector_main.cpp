@@ -1,10 +1,27 @@
 #include "./vector.hpp"
+#include "./map.hpp"
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
 
 int main()
 {
+
+	{
+		ft::map<int, char>		bst;
+
+		for (int i = 0; i < 30; i+=2)
+		{
+			ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
+			bst.insert(temp);
+		}
+		for (int i = 1; i < 30; i+=2)
+		{
+			ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
+			bst.insert(temp);
+		}
+	}
+
 	srand(time(0));
 
 	// Default constructor
