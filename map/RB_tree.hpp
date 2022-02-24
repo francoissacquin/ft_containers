@@ -2,6 +2,7 @@
 # define RB_TREE_HPP
 
 #include "./pair.hpp"
+#include "./bidirectional_iterator.hpp"
 #include <iostream>
 #include <string>
 
@@ -55,7 +56,7 @@ struct less : binary_function<T, T, bool>
 	{
 		return (x < y);
 	}
-}
+}; // less compare structure
 
 
 // RB_TREE IMPLEMENTATION//
@@ -70,7 +71,7 @@ public:
 	typedef Compare											key_compare;
 	typedef Node<value_type>								node;
 	typedef Alloc											allocator_type;
-	typedef rb_tree_iterator<value_type, node>				iterator
+	typedef rb_tree_iterator<value_type, node>				iterator;
 	typedef size_t											size_type;
 	typedef typename Alloc::template rebind<node>::other	node_allocator_type;
 	typedef	node *											NodePtr;
@@ -145,6 +146,11 @@ public:
 		return search_tree_helper(this->_root, k);
 	}
 
+	NodePtr		bounded_search_tree(key_type k)
+	{
+		return bounded_search_tree_helper(_root, k);
+	}
+
 	NodePtr		begin( void )
 	{
 		return this->minimum(_root);
@@ -152,8 +158,6 @@ public:
 
 	NodePtr		end( void )
 	{
-		if (_root == _TNULL)
-			return NULL;
 		return _TNULL;
 	}
 
@@ -161,7 +165,7 @@ public:
 	// finding node with minimum key
 	NodePtr		minimum(NodePtr n)
 	{
-		while (n->left != _TNULL)
+		while (n->left != _TNULL && n->left != NULL)
 			n = n->left;
 		return n;
 	}
@@ -345,12 +349,12 @@ public:
 		return this->root;
 	}
 
-	size_type	get_Size( void ) const
+	size_t	get_Size( void ) const
 	{
 		return this->_size;
 	}
 
-	size_type	get_Max_Size( void ) const
+	size_t	get_Max_Size( void ) const
 	{
 		return _node_alloc.max_size();
 	}
@@ -410,7 +414,7 @@ public:
 		node_allocator_type		temp_node_alloc = rhs._node_alloc;
 		node *					temp_root = rhs._root;
 		node *					temp_TNULL = rhs._TNULL;
-		size_type				temp_size = rhs._size;
+		size_t					temp_size = rhs._size;
 
 		rhs._pair_alloc = _pair_alloc;
 		rhs._node_alloc = _node_alloc;
@@ -431,7 +435,7 @@ private:
 	node_allocator_type		_node_alloc;
 	node *					_root;
 	node *					_TNULL;
-	size_type				_size;
+	size_t					_size;
 
 	// Pour l'instant pas besoin
 	// void initializeNULLNode(NodePtr node, NodePtr parent) {}
@@ -442,7 +446,7 @@ private:
 		{
 			return n;
 		}
-		if (key_compare() (key, n->data->_first)) // we progress throught he tree by comapring data values, in case the data is a pair, the pair operator overloads compare key first
+		if (key_compare() (k, n->data->_first)) // we progress throught he tree by comparing data values, in case the data is a pair, the pair operator overloads compare key first
 		{
 			return search_tree_helper(n->left, k);
 		}
@@ -450,6 +454,40 @@ private:
 		{
 			return search_tree_helper(n->right, k);
 		}
+	}
+
+	NodePtr		bounded_search_tree_helper(NodePtr n, key_type k)
+	{
+		NodePtr		temp;
+
+		temp = n->parent;
+		while (n != _TNULL)
+		{
+			if (!(key_compare() (n->data->_first, k)) && !(key_compare() (k, n->data->_first)))
+				return n;
+			else if (key_compare() (n->data->_first, k))
+			{
+				n = n->right;
+			}
+			else
+			{
+				if (n->left != _TNULL && !(key_compare() (n->left->data->_first, k)))
+				{
+					n = n->left;
+				}
+				else if (n->left != _TNULL)
+				{
+					iterator	it(n->left);
+
+					if (key_compare() (k, (++it)->data->_first))
+						return *(it);
+					else
+						n = n->right;
+				}
+			}
+			temp = n->parent;
+		}
+		return n;
 	}
 
 	void		fix_delete(NodePtr x)
@@ -706,18 +744,17 @@ private:
 template<typename T>
 Node<T> *		successor(Node<T> * x)
 {
-	RB_tree		temp;
 	// if the right sub-tree is not null, the successor is the leftmost node in the right sub-tree
-	if (x->right != temp.get_TNULL())
+	if (x->right->right != NULL)
 	{
 		Node<T> *	 y = x->right;
-		while (y->left != temp.get_TNULL())
+		while (y->left->left != NULL)
 			y = y->left;
 		return y;
 	}
 	//else it is the lowest ancestor of x whose left child is also an ancestor of x
 	Node<T> *	 y = x->parent;
-	while (y != temp.get_TNULL() && x == y->right)
+	while (y->right != NULL && x == y->right)
 	{
 		x = y;
 		y = y->parent;
@@ -729,20 +766,17 @@ Node<T> *		successor(Node<T> * x)
 template<typename T>
 Node<T> *		predecessor(Node<T> * x)
 {
-	RB_tree		temp;
-	// if node given is TNULL, we return NULL
-	if (x->right == temp.get_TNULL())
 	// if the left tree is not null, the predecessor is the right most node in the left sub-tree
-	if (x->left != _TNULL)
+	if (x->left->left != NULL)
 	{
 		Node<T> *	 y = x->right;
-		while (y->right != temp.get_TNULL())
+		while (y->right->right != NULL)
 			y = y->right;
 		return y;
 	}
 	//else it is the highest ancestor of x whose right child is also an ancestor of x
 	Node<T> * y = x->parent;
-	while (y != temp.get_TNULL() && x == y->left)
+	while (y->right != NULL && x == y->left)
 	{
 		x = y;
 		y = y->parent;

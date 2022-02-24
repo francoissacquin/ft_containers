@@ -596,7 +596,7 @@ bool		operator==( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
 {
 	if (lhs.size() == rhs.size())
 	{
-		// possibility of replacing that by std::equal(lhs.begin(), lhs.end(), rhs.begin())
+		// possibility of replacing that by ft::equal(lhs.begin(), lhs.end(), rhs.begin())
 		for (size_t i = 0; i < lhs.size(); i++)
 		{
 			if (lhs[i] != rhs[i])
@@ -619,7 +619,7 @@ bool		operator!=( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
 template <class T, class Alloc>
 bool		operator<( const vector<T, Alloc> & lhs, const vector<T, Alloc> & rhs )
 {
-	//possibility of replacing by std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())
+	//possibility of replacing by ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())
 	size_t	i = 0;
 
 	while (i < lhs.size())

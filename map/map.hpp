@@ -275,15 +275,109 @@ public:
 	| |_| |  __/| |___|  _ <  / ___ \| |  | | |_| | |\  |___) |
 	 \___/|_|   |_____|_| \_\/_/   \_\_| |___\___/|_| \_|____/ */
 
-	 
+	 iterator				find( const key_type & k)
+	 {
+		 return iterator(_tree.search_tree(k));
+	 }
 
+	 const_iterator			find( const key_type & k) const
+	 {
+		 return const_iterator(_tree.search_tree(k));
+	 }
 
+	 size_type				count( const key_type & k) const
+	 {
+		 iterator		it(_tree.search_tree(k));
 
+		 if (it == end())
+		 {
+			 return 0;
+		 }
+		 return 1;
+	 }
 
+	 iterator				lower_bound( const key_type & k)
+	 {
+		return iterator(_tree.bounded_search_tree(k));
+	 }
+
+	 const_iterator			lower_bound( const key_type & k)
+	 {
+		 return const_iterator(_tree.bounded_search_tree(k));
+	 }
+
+	 iterator				upper_bound( const key_type & k)
+	 {
+		iterator		it(_tree.bounded_search_tree(k));
+
+		if (!(_comp(it->data->_first, k)) && !(_comp(k, it->data->_first)))
+			return ++it;
+		else
+			return it;
+	 }
+
+	 const_iterator			upper_bound( const key_type & k) const
+	 {
+		iterator		it(_tree.bounded_search_tree(k));
+
+		if (!(_comp(it->data->_first, k)) && !(_comp(k, it->data->_first)))
+			return const_iterator(++it);
+		else
+			return const_iterator(it);
+	 }
+
+	 pair<iterator, iterator>		equal_range( const key_type & k)
+	 {
+		 pair<iterator, iterator>		ret;
+
+		 ret.first = lower_bound(k);
+		 ret.second = upper_bound(k);
+		 return ret;
+	 }
+
+	 pair<const_iterator, const_iterator>		equal_range( const key_type & k) const
+	 {
+		 pair<const_iterator, const_iterator>		ret;
+
+		 ret.first = lower_bound(k);
+		 ret.second = upper_bound(k);
+		 return ret;
+	 }
+
+	 allocator_type			get_allocator( void ) const
+	 {
+		 return _allocation;
+	 }
 
 }; //end of map class
 
+template < class Key, class T, class Compare, class Alloc>
+bool		operator==( const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs)
+{
+	if (lhs.size() != rhs.size())
+	{
+		return false;
+	}
+	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+}
 
+template < class Key, class T, class Compare, class Alloc>
+bool		operator!=( const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs)
+{
+	return (!(lhs == rhs));
+}
+
+template < class Key, class T, class Compare, class Alloc>
+bool		operator<( const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs)
+{
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+}
+
+template < class Key, class T, class Compare, class Alloc>
+bool		operator( const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs)
+{
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+}
 
 
 };// end of namespace
