@@ -12,7 +12,7 @@ INC = ./vector/equal.hpp \
  ./vector/enable_if.hpp
 
 
-CFLAGS = -Wall -Wextra -Werror -std=c++98 -I.
+CFLAGS = -Wall -Wextra -Werror -std=c++98 -I. #-fsanitize=address -g3
 
 OBJS := ${SRCS:.cpp=.o}
 

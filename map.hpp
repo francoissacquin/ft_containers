@@ -5,8 +5,10 @@
 #include <stdexcept>
 #include "./vector/equal.hpp"
 #include "./vector/lexicographical_compare.hpp"
+#include "./vector/reverse_iterator.hpp"
 #include "./map/RB_tree.hpp"
 #include "./map/bidirectional_iterator.hpp"
+#include "vector.hpp"
 
 namespace ft
 {
@@ -61,7 +63,7 @@ public:
 
 		bool		operator() (const value_type & x, const value_type & y) const
 		{
-			return _comp(x._first, y._first);
+			return _comp(x.first, y.first);
 		}
 	}; 
 
@@ -84,15 +86,15 @@ public:
 		insert(first, last);
 	}
 
-	map( const map & src ): _comp(src._comparison)
+	map( const map & src ): _comp(src._comp), _allocation(src._allocation)
 	{
-		_rb_tree = src._rb_tree;
+		insert(src.begin(), src.end());
 	}
 
 	//DESTRUCTORS//
 	~map( void )
 	{
-		_rb_tree.clear();
+		// nothing here
 	}
 
 	//OPERATOR OVERLOAD//
@@ -100,7 +102,9 @@ public:
 	{
 		if (this != &rhs)
 		{
-			_rb_tree = rhs._rb_tree;
+			this->clear();
+			_rb_tree.reassign_root();
+			insert(rhs.begin(), rhs.end());
 		}
 		return *this;
 	}
@@ -185,7 +189,7 @@ public:
 
 	mapped_type &		operator[](const key_type & k)
 	{
-		return insert(value_type(k, mapped_type()))._first->_second;
+		return insert(value_type(k, mapped_type())).first->second;
 	}
 
 
@@ -203,7 +207,7 @@ public:
 	iterator				insert( iterator pos, const value_type & val)
 	{
 		(void)pos;
-		return insert(val)._first;
+		return insert(val).first;
 	}
 
 	template <class InputIterator>
@@ -218,7 +222,7 @@ public:
 
 	void					erase( iterator pos)
 	{
-		_rb_tree.erase(pos._first);
+		_rb_tree.erase(pos.first);
 	}
 
 	size_type				erase( const key_type & k )
@@ -238,7 +242,7 @@ public:
 
 		while (temp != last)
 		{
-			it_vec.push_back(temp->_first);
+			it_vec.push_back(temp->first);
 			temp++;
 		}
 		for (size_t i = 0; i < it_vec.size(); i++)
@@ -289,9 +293,7 @@ public:
 
 	 size_type				count( const key_type & k) const
 	 {
-		 iterator		it(_rb_tree.search_tree(k));
-
-		 if (it == end())
+		 if (find(k) == this->end())
 		 {
 			 return 0;
 		 }
@@ -300,32 +302,22 @@ public:
 
 	 iterator				lower_bound( const key_type & k)
 	 {
-		return iterator(_rb_tree.bounded_search_tree(k));
+		return iterator(_rb_tree.lower_bound(k));
 	 }
 
 	 const_iterator			lower_bound( const key_type & k) const
 	 {
-		 return const_iterator(_rb_tree.bounded_search_tree(k));
+		 return const_iterator(_rb_tree.lower_bound(k));
 	 }
 
 	 iterator				upper_bound( const key_type & k)
 	 {
-		iterator		it(_rb_tree.bounded_search_tree(k));
-
-		if (!(_comp(it->data->_first, k)) && !(_comp(k, it->data->_first)))
-			return ++it;
-		else
-			return it;
+		return iterator(_rb_tree.upper_bound(k));
 	 }
 
 	 const_iterator			upper_bound( const key_type & k) const
 	 {
-		iterator		it(_rb_tree.bounded_search_tree(k));
-
-		if (!(_comp(it->data->_first, k)) && !(_comp(k, it->data->_first)))
-			return const_iterator(++it);
-		else
-			return const_iterator(it);
+		return const_iterator(_rb_tree.upper_bound(k));
 	 }
 
 	 pair<iterator, iterator>		equal_range( const key_type & k)
@@ -349,6 +341,11 @@ public:
 	 allocator_type			get_allocator( void ) const
 	 {
 		 return _allocation;
+	 }
+
+	 void					print_tree( void )
+	 {
+		 _rb_tree.print_tree();
 	 }
 
 }; //end of map class

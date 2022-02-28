@@ -79,19 +79,24 @@ public:
 
 
 	//CONSTRUCTOR//
-	RB_tree( const allocator_type & alloc = allocator_type()): _pair_alloc(alloc), _root(NULL)
+	RB_tree( const allocator_type & alloc = allocator_type()): _pair_alloc(alloc), _root(NULL), _size(0)
 	{
 		_TNULL = _node_alloc.allocate(1);
 		_TNULL->right = NULL;
 		_TNULL->left = NULL;
 		_TNULL->color = 0;
 		_root = _TNULL;
+		_TNULL->parent = _root;
 	}
 
 	~RB_tree( void )
 	{
-		delete_all_nodes();
-		_node_alloc.deallocate(_TNULL, 1);
+		delete_all_nodes(_root);
+		if (_TNULL != NULL)
+		{
+			_node_alloc.deallocate(_TNULL, 1);
+			_TNULL = NULL;
+		}
 	}
 
 	void			initialize_TNULL( void )
@@ -100,6 +105,13 @@ public:
 		_TNULL->right = NULL;
 		_TNULL->left = NULL;
 		_TNULL->color = 0;
+		_TNULL->parent = _root;
+	}
+
+	void			reassign_root( void )
+	{
+		_root = _TNULL;
+		_TNULL->parent = _root;
 	}
 
 	RB_tree &		operator=( const RB_tree & rhs )
@@ -107,8 +119,8 @@ public:
 		if (this != &rhs)
 		{
 			clear();
-			initialize_TNULL();
 			_root = _TNULL;
+			_TNULL->parent = _root;
 			in_order_tree_fill(rhs.get_Root());
 		}
 		return *this;
@@ -116,16 +128,19 @@ public:
 
 	void			clear( void )
 	{
-		delete_all_nodes();
-		_node_alloc.deallocate(_TNULL, 1);
+		delete_all_nodes(_root);
+		_size = 0;
+		_root = _TNULL;
 	}
 
-	void	delete_all_nodes( void )
+	void	delete_all_nodes( NodePtr x )
 	{
-		while (_root != _TNULL)
-		{
-			delete_node(_root->data);
-		}
+		if (x == _TNULL)
+			return ;
+		delete_all_nodes(x->left);
+		delete_all_nodes(x->right);
+		_pair_alloc.destroy(&(x->data));
+		_node_alloc.deallocate(x, 1);
 	}
 
 	void	in_order_tree_fill(NodePtr n)
@@ -141,29 +156,34 @@ public:
 
 
 	// searching the tree for k key and returning the corresponding node
-	NodePtr		search_tree(key_type k)
+	NodePtr		search_tree(key_type k) const
 	{
 		return search_tree_helper(this->_root, k);
 	}
 
-	NodePtr		bounded_search_tree(key_type k)
+	NodePtr		lower_bound(key_type k) const
 	{
-		return bounded_search_tree_helper(_root, k);
+		return lower_bound_helper(_root, k);
 	}
 
-	NodePtr		begin( void )
+	NodePtr		upper_bound(key_type k) const
+	{
+		return upper_bound_helper(_root, k);
+	}
+
+	NodePtr		begin( void ) const
 	{
 		return this->minimum(_root);
 	}
 
-	NodePtr		end( void )
+	NodePtr		end( void ) const
 	{
 		return _TNULL;
 	}
 
 
 	// finding node with minimum key
-	NodePtr		minimum(NodePtr n)
+	NodePtr		minimum(NodePtr n) const
 	{
 		while (n->left != _TNULL && n->left != NULL)
 			n = n->left;
@@ -180,7 +200,7 @@ public:
 
 
 	// find the successor of a given node
-	NodePtr		successor(NodePtr x)
+	NodePtr		successor(NodePtr x) const
 	{
 		// if the right sub-tree is not null, the successor is the leftmost node in the right sub-tree
 		if (x->right != _TNULL)
@@ -199,7 +219,7 @@ public:
 
 
 	//find the predecessor of a given node
-	NodePtr		predecessor(NodePtr x)
+	NodePtr		predecessor(NodePtr x) const
 	{
 		// if the left tree is not null, the predecessor is the right most node in the left sub-tree
 		if (x->left != _TNULL)
@@ -225,7 +245,7 @@ public:
 			y->left->parent = x;
 		}
 		y->parent = x->parent;
-		if (x->parent == NULL)
+		if (x->parent == _TNULL)
 		{
 			this->_root = y;
 		}
@@ -252,7 +272,7 @@ public:
 			y->right->parent = x;
 		}
 		y->parent = x->parent;
-		if (x->parent == NULL)
+		if (x->parent == _TNULL)
 		{
 			this->_root = y;
 		}
@@ -287,13 +307,21 @@ public:
 		while (x != _TNULL)
 		{
 			y = x;
-			if (new_node->data < x->data) // we go down the tree to place the new_node by comparing its data value with existing nodes.
+			if (key_compare() (new_node->data.first, x->data.first)) // we go down the tree to place the new_node by comparing its data value with existing nodes.
 			{
 				x = x->left;
 			}
-			else
+			else if (key_compare() (x->data.first, new_node->data.first))
 			{
 				x = x->right;
+			}
+			else
+			{
+				_pair_alloc.destroy(&(new_node->data));
+				_node_alloc.deallocate(new_node, 1);
+				ret.first = iterator(x);
+				ret.second = false;
+				return ret;
 			}
 		}
 
@@ -302,6 +330,7 @@ public:
 		new_node->parent = y;
 		if (y == NULL) // in case the tree is empty
 		{
+			new_node->parent = _TNULL;
 			this->_root = new_node;
 		}
 		else if (new_node->data < y->data) // we check by comparing data values wether new_node goes to the left or right of its parent
@@ -314,24 +343,26 @@ public:
 		}
 
 		_size++;
-		ret._first = iterator(new_node);
-		ret._second = true;
+		ret.first = iterator(new_node);
+		ret.second = true;
 
 		//if the new_node has become root, we simply return
-		if (new_node->parent == NULL)
+		if (new_node->parent == _TNULL)
 		{
 			new_node->color = 0;
+			_TNULL->parent = _root;
 			return ret;
 		}
 
 		// if the grandparent is null, we simply return ( new_node is a child of _root )
-		if (new_node->parent->parent == NULL)
+		if (new_node->parent->parent == _TNULL)
 		{
 			return ret;
 		}
 
 		// AND NOW LET'S FIX THE TREE
 		fix_insert(new_node);
+		_TNULL->parent = _root;
 		return ret;
 	}
 
@@ -339,14 +370,17 @@ public:
 	{
 		if (_root == _TNULL)
 			return ;
-		delete_node(search_tree(k)->data);
-		
+		NodePtr			n = search_tree(k);
+		if (n == _TNULL)
+			return ;
+		delete_node(n->data);
+		_TNULL->parent = _root;
 	}
 
 
 	NodePtr		get_Root( void ) const
 	{
-		return this->root;
+		return this->_root;
 	}
 
 	size_t	get_Size( void ) const
@@ -364,6 +398,10 @@ public:
 		return _TNULL;
 	}
 
+	allocator_type	get_allocator( void ) const
+	{
+		return _pair_alloc;
+	}
 
 	void		delete_node(value_type d)
 	{
@@ -440,13 +478,13 @@ private:
 	// Pour l'instant pas besoin
 	// void initializeNULLNode(NodePtr node, NodePtr parent) {}
 
-	NodePtr		search_tree_helper(NodePtr n, key_type k)
+	NodePtr		search_tree_helper(NodePtr n, key_type k) const
 	{
-		if (n == _TNULL || k == n->data->first) // if current node is empty or k is equal to current node data we return root
+		if (n == _TNULL || k == n->data.first) // if current node is empty or k is equal to current node data we return root
 		{
 			return n;
 		}
-		if (key_compare() (k, n->data->_first)) // we progress throught he tree by comparing data values, in case the data is a pair, the pair operator overloads compare key first
+		if (key_compare() (k, n->data.first)) // we progress throught he tree by comparing data values, in case the data is a pair, the pair operator overloads compare key first
 		{
 			return search_tree_helper(n->left, k);
 		}
@@ -456,38 +494,46 @@ private:
 		}
 	}
 
-	NodePtr		bounded_search_tree_helper(NodePtr n, key_type k)
+	NodePtr		lower_bound_helper(NodePtr x, key_type k) const
 	{
-		NodePtr		temp;
+		NodePtr		y = _root;
 
-		temp = n->parent;
-		while (n != _TNULL)
+		while (x != _TNULL)
 		{
-			if (!(key_compare() (n->data->_first, k)) && !(key_compare() (k, n->data->_first)))
-				return n;
-			else if (key_compare() (n->data->_first, k))
+			if (!(key_compare() (x->data.first, k)))
 			{
-				n = n->right;
+				y = x;
+				x = x->left;
 			}
 			else
 			{
-				if (n->left != _TNULL && !(key_compare() (n->left->data->_first, k)))
-				{
-					n = n->left;
-				}
-				else if (n->left != _TNULL)
-				{
-					iterator	it(n->left);
-
-					if (key_compare() (k, (++it)->data->_first))
-						return *(it);
-					else
-						n = n->right;
-				}
+				x = x->right;
 			}
-			temp = n->parent;
 		}
-		return n;
+		if (key_compare() (y->data.first, k) && x == _TNULL)
+			return _TNULL;
+		return y;
+	}
+
+	NodePtr		upper_bound_helper(NodePtr x, key_type k) const
+	{
+		NodePtr		y = _root;
+
+		while (x != _TNULL)
+		{
+			if (key_compare() (k, x->data.first))
+			{
+				y = x;
+				x = x->left;
+			}
+			else
+			{
+				x = x->right;
+			}
+		}
+		if (key_compare() (y->data.first, k) && x == _TNULL)
+			return _TNULL;
+		return y;
 	}
 
 	void		fix_delete(NodePtr x)
@@ -570,7 +616,7 @@ private:
 
 	void	rb_transplant(NodePtr u, NodePtr v)
 	{
-		if (u->parent == NULL) // Case where u is _root
+		if (u->parent == _TNULL) // Case where u is _root
 		{
 			_root = v; // We make v the root
 		}
@@ -744,6 +790,8 @@ private:
 template<typename T>
 Node<T> *		successor(Node<T> * x)
 {
+	if (x->left == NULL)
+		return x;
 	// if the right sub-tree is not null, the successor is the leftmost node in the right sub-tree
 	if (x->right->right != NULL)
 	{
@@ -754,7 +802,7 @@ Node<T> *		successor(Node<T> * x)
 	}
 	//else it is the lowest ancestor of x whose left child is also an ancestor of x
 	Node<T> *	 y = x->parent;
-	while (y->right != NULL && x == y->right)
+	while (y->left != NULL && x == y->right)
 	{
 		x = y;
 		y = y->parent;
@@ -762,14 +810,24 @@ Node<T> *		successor(Node<T> * x)
 	return y;
 }
 
+
 //find the predecessor of a given node
 template<typename T>
 Node<T> *		predecessor(Node<T> * x)
 {
+	if (x->left == NULL)
+	{
+		Node<T> *	y = x->parent;
+		while (y->right->right != NULL)
+		{
+			y = y->right;
+		}
+		return y;
+	}
 	// if the left tree is not null, the predecessor is the right most node in the left sub-tree
 	if (x->left->left != NULL)
 	{
-		Node<T> *	 y = x->right;
+		Node<T> *	 y = x->left;
 		while (y->right->right != NULL)
 			y = y->right;
 		return y;

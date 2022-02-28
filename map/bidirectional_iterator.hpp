@@ -1,7 +1,9 @@
 #ifndef BIDIRECTIONAL_ITERATOR_HPP
 # define BIDIRECTIONAL_ITERATOR_HPP
 
+#include <iostream>
 #include "../vector/iterator.hpp"
+#include "../vector/iterator_traits.hpp"
 #include "RB_tree.hpp"
 
 namespace ft
@@ -67,7 +69,7 @@ namespace ft
 		{
 			rb_tree_iterator	copy(*this);
 
-			_ptr = sucessor(_ptr);
+			_ptr = successor(_ptr);
 			return copy;
 		}
 
@@ -89,12 +91,12 @@ namespace ft
 		//DEREFERENCED AS AN RVALUE 
 		reference				operator*( void ) const
 		{
-			return *_ptr;
+			return _ptr->data;
 		}
 
 		pointer					operator->( void ) const
 		{
-			return _ptr;
+			return &(_ptr->data);
 		}
 
 		// COMPARISON OPERATORS

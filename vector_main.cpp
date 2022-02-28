@@ -10,16 +10,27 @@ int main()
 	{
 		ft::map<int, char>		bst;
 
-		for (int i = 0; i < 30; i+=2)
+		for (int i = 1; i < 20; i++)
 		{
 			ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
 			bst.insert(temp);
 		}
-		for (int i = 1; i < 30; i+=2)
+
+		ft::map<int, char>::iterator	it = bst.begin();
+		ft::map<int, char>::iterator	ite = bst.end();
+
+		bst.print_tree();
+		while (it != ite)
 		{
-			ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
-			bst.insert(temp);
+			std::cout << it->first << " : " << it->second << std::endl;
+			++it;
 		}
+
+		// ft::pair<int, char>		temp = ft::make_pair(1, 1 + 96);
+		// bst.insert(temp);
+
+		bst.print_tree();
+		return 0;
 	}
 
 	srand(time(0));
