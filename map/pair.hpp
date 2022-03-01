@@ -33,6 +33,12 @@ struct pair
 		// nothing here
 	}
 
+	template < class U1, class U2 >
+	operator pair<const U1, U2>() const
+	{
+		return (pair<const U1, U2>(first, second));
+	}
+
 	//ASSIGNATION OPERATOR//
 	pair &		operator=( const pair & other )
 	{

@@ -1,5 +1,5 @@
-#ifndef RB_TREE_HPP
-# define RB_TREE_HPP
+#ifndef MAP_RB_TREE_HPP
+# define MAP_RB_TREE_HPP
 
 #include "./pair.hpp"
 #include "./bidirectional_iterator.hpp"
@@ -333,7 +333,7 @@ public:
 			new_node->parent = _TNULL;
 			this->_root = new_node;
 		}
-		else if (new_node->data < y->data) // we check by comparing data values wether new_node goes to the left or right of its parent
+		else if (key_compare() (new_node->data.first, y->data.first)) // we check by comparing data values wether new_node goes to the left or right of its parent
 		{
 			y->left = new_node;
 		}
@@ -446,7 +446,7 @@ public:
 		}
 	}
 
-	void		swap( const RB_tree & rhs)
+	void		swap( RB_tree & rhs)
 	{
 		allocator_type			temp_pair_alloc = rhs._pair_alloc;
 		node_allocator_type		temp_node_alloc = rhs._node_alloc;
@@ -480,7 +480,7 @@ private:
 
 	NodePtr		search_tree_helper(NodePtr n, key_type k) const
 	{
-		if (n == _TNULL || k == n->data.first) // if current node is empty or k is equal to current node data we return root
+		if (n == _TNULL) // if current node is empty or k is equal to current node data we return root
 		{
 			return n;
 		}
@@ -488,9 +488,13 @@ private:
 		{
 			return search_tree_helper(n->left, k);
 		}
-		else
+		else if (key_compare() (n->data.first, k))
 		{
 			return search_tree_helper(n->right, k);
+		}
+		else
+		{
+			return n;
 		}
 	}
 
@@ -640,11 +644,12 @@ private:
 
 		while (n != _TNULL) // while loop where we search for value_type k
 		{
-			if (n->data == k)
+			if ((!(key_compare() (n->data.first, k.first))) && (!(key_compare() (k.first, n->data.first))))
 			{
 				z = n;
+				break ;
 			}
-			if (n->data <= k)
+			else if (key_compare() (n->data.first, k.first))
 			{
 				n = n->right;
 			}

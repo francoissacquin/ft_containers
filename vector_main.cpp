@@ -4,33 +4,65 @@
 #include <time.h>
 #include <stdlib.h>
 
+struct ft_more {
+	bool	operator()(const int &first, const int &second) const {
+		return (first > second);
+	}
+};
+
 int main()
 {
 
+	// {
+	// 	ft::map<int, char>		bst;
+
+	// 	for (int i = 1; i < 20; i++)
+	// 	{
+	// 		ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
+	// 		bst.insert(temp);
+	// 	}
+
+	// 	ft::map<int, char>::iterator	it = bst.begin();
+	// 	ft::map<int, char>::iterator	ite = bst.end();
+
+	// 	bst.print_tree();
+	// 	while (it != ite)
+	// 	{
+	// 		std::cout << it->first << " : " << it->second << std::endl;
+	// 		++it;
+	// 	}
+
+	// 	// ft::pair<int, char>		temp = ft::make_pair(1, 1 + 96);
+	// 	// bst.insert(temp);
+
+	// 	bst.print_tree();
+	// 	return 0;
+	// }
+
 	{
-		ft::map<int, char>		bst;
+		ft::map<int, std::string, ft_more> mp;
 
-		for (int i = 1; i < 20; i++)
+		mp[42] = "fgzgxfn";
+		mp.print_tree();
+		mp[25] = "funny";
+		mp.print_tree();
+		mp[80] = "hey";
+		mp.print_tree();
+		mp[12] = "no";
+		mp.print_tree();
+		mp[27] = "bee";
+		mp.print_tree();
+		mp[90] = "8";
+		mp.print_tree();
+
+		ft::map<int, std::string>::iterator		mp_it = mp.begin();
+		while (mp_it != mp.end())
 		{
-			ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
-			bst.insert(temp);
+			std::cout << mp_it->first << " : " << mp_it->second << std::endl;
+			++mp_it;
 		}
 
-		ft::map<int, char>::iterator	it = bst.begin();
-		ft::map<int, char>::iterator	ite = bst.end();
-
-		bst.print_tree();
-		while (it != ite)
-		{
-			std::cout << it->first << " : " << it->second << std::endl;
-			++it;
-		}
-
-		// ft::pair<int, char>		temp = ft::make_pair(1, 1 + 96);
-		// bst.insert(temp);
-
-		bst.print_tree();
-		return 0;
+		return (0);
 	}
 
 	srand(time(0));
