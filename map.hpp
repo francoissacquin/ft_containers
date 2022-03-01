@@ -6,6 +6,7 @@
 #include "./vector/equal.hpp"
 #include "./vector/lexicographical_compare.hpp"
 #include "./vector/reverse_iterator.hpp"
+#include "./vector/random_access_iterator.hpp"
 #include "./map/RB_tree.hpp"
 #include "./map/bidirectional_iterator.hpp"
 #include "vector.hpp"
@@ -222,7 +223,7 @@ public:
 
 	void					erase( iterator pos)
 	{
-		_rb_tree.erase(pos.first);
+		_rb_tree.erase(pos->first);
 	}
 
 	size_type				erase( const key_type & k )
@@ -237,7 +238,7 @@ public:
 
 	void					erase( iterator first, iterator last)
 	{
-		ft::vector<key_type>	it_vec(iterator_len(first, last));
+		ft::vector<key_type>	it_vec(iter_distance(first, last));
 		iterator				temp(first);
 
 		while (temp != last)
