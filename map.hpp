@@ -190,7 +190,12 @@ public:
 
 	mapped_type &		operator[](const key_type & k)
 	{
-		return insert(value_type(k, mapped_type())).first->second;
+		// if (find(k) == end())
+		// {
+		// 	insert(value_type(k, mapped_type()));
+		// }
+		// return (_rb_tree.search_tree(k)->data.second);
+		return this->insert(value_type(k, mapped_type())).first->second;
 	}
 
 
@@ -252,7 +257,11 @@ public:
 
 	void					swap( map & x)
 	{
-		_rb_tree.swap(x._rb_tree);
+		// RB_tree<Key, T, Compare, Alloc>	&	temp_rb_tree(this->_rb_tree);
+
+		// this->_rb_tree = x._rb_tree;
+		// x._rb_tree = temp_rb_tree;
+		this->_rb_tree.swap(x._rb_tree);
 	}
 
 	void					clear( void )
@@ -389,6 +398,12 @@ template < class Key, class T, class Compare, class Alloc>
 bool		operator>=( const map<Key, T, Compare, Alloc> & lhs, const map<Key, T, Compare, Alloc> & rhs)
 {
 	return (!(lhs < rhs));
+}
+
+template < class Key, class T, class Compare, class Alloc>
+void		swap( map<Key, T, Compare, Alloc> & lhs, map<Key, T, Compare, Alloc> & rhs)
+{
+	lhs.swap(rhs);
 }
 
 

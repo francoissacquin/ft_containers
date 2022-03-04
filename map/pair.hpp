@@ -27,17 +27,22 @@ struct pair
 		// nothing here
 	}
 
+	pair( T1 & x, T2 & y): first(x), second(y)
+	{
+		// nothing here
+	}
+
 	template< class U1, class U2 >
 	pair( const pair<U1, U2> & p ): first(p.first), second(p.second)
 	{
 		// nothing here
 	}
 
-	template < class U1, class U2 >
-	operator pair<const U1, U2>() const
-	{
-		return (pair<const U1, U2>(first, second));
-	}
+	// template < class U1, class U2 >
+	// operator pair<const U1, U2>() const
+	// {
+	// 	return (pair<const U1, U2>(first, second));
+	// }
 
 	//ASSIGNATION OPERATOR//
 	pair &		operator=( const pair & other )
@@ -67,14 +72,6 @@ bool					operator==( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)
 		return true;
 	return false;
 }
-
-// template < class T1, class T2 >
-// bool					operator==( ft::pair<T1, T2> & lhs, ft::pair<T1, T2> & rhs)
-// {
-// 	if (lhs.first == rhs.first && lhs.second == rhs.second)
-// 		return true;
-// 	return false;
-// }
 
 template < class T1, class T2 >
 bool					operator!=( const ft::pair<T1, T2> & lhs, const ft::pair<T1, T2> & rhs)

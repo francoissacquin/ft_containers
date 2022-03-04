@@ -448,17 +448,17 @@ public:
 
 	void		swap( RB_tree & rhs)
 	{
-		allocator_type			temp_pair_alloc = rhs._pair_alloc;
+		allocator_type			temp_pair_alloc = rhs.get_allocator();
 		node_allocator_type		temp_node_alloc = rhs._node_alloc;
-		node *					temp_root = rhs._root;
-		node *					temp_TNULL = rhs._TNULL;
-		size_t					temp_size = rhs._size;
+		node *					temp_root = rhs.get_Root();
+		node *					temp_TNULL = rhs.get_TNULL();
+		size_t					temp_size = rhs.get_Size();
 
-		rhs._pair_alloc = _pair_alloc;
+		rhs._pair_alloc = this->get_allocator();
 		rhs._node_alloc = _node_alloc;
-		rhs._root = _root;
-		rhs._TNULL = _TNULL;
-		rhs._size = _size;
+		rhs._root = this->get_Root();
+		rhs._TNULL = this->get_TNULL();
+		rhs._size = this->get_Size();
 
 		_pair_alloc = temp_pair_alloc;
 		_node_alloc = temp_node_alloc;

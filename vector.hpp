@@ -179,9 +179,11 @@ public:
 	{
 		if (n < _size)
 		{
-			for (size_type i = 0; i < _size - n; i++)
-				_allocation.destroy(_array + (_size - i));
-			_size = _size - (_size - n);
+			while (_size > n)
+			{
+				_allocation.destroy(_array + (_size - 1));
+				_size--;
+			}
 		}
 		else if (n > _size && n <= _capacity)
 		{
@@ -408,7 +410,7 @@ public:
 		{
 			if (_size + count < _capacity)
 			{
-				size_type		end_diff;
+				/*size_type		end_diff;
 				size_type		start_diff;
 				size_type		k;
 
@@ -424,19 +426,53 @@ public:
 				{
 					_allocation.construct( _array + start_diff + j, value);
 				}
+				_size += count;*/
+			}
+			else 
+			{
+				size_t			new_cap;
+				if (_size + count < _capacity * 2)
+					new_cap = _capacity * 2;
+				else
+					new_cap = _size + count;
+
+				size_type		start_diff;
+				pointer			temp;
+				size_type		i;
+				size_type		insert_len;
+
+				start_diff = ft::iter_distance(begin(), pos);
+				temp = _allocation.allocate(new_cap);
+				i = 0;
+
+				while (i < start_diff)
+				{
+					_allocation.construct(temp + i, _array[i]);
+					i++;
+				}
+
+				insert_len = i + count;
+				while (i < insert_len)
+				{
+					_allocation.construct(temp + i, value);
+					i++;
+				}
+
+				while (i < _size + count)
+				{
+					_allocation.construct(temp + i, _tab[start_diff])
+					start_diff++;
+					i++;
+				}
+
+				for (size_t j = 0; j < _size; j++)
+				{
+					_allocation.destroy(_array + j);
+				}
+				_allocation.deallocate(_array, _capacity);
+				_capacity = new_cap;
 				_size += count;
-			}
-			else if (_size + count < _capacity * 2)
-			{
-				size_type	len = ft::iter_distance(begin(), pos);
-				reserve(_capacity * 2);
-				insert(begin() + len, count, value);
-			}
-			else
-			{
-				size_type	len = ft::iter_distance(begin(), pos);
-				reserve(_size + count);
-				insert(begin() + len, count, value);
+				_array = temp;
 			}
 		}
 	}
