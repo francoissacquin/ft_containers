@@ -243,16 +243,11 @@ public:
 
 	void					erase( iterator first, iterator last)
 	{
-		ft::vector<key_type>	it_vec(iter_distance(first, last));
-		iterator				temp(first);
-
-		while (temp != last)
+		while (first != last)
 		{
-			it_vec.push_back(temp->first);
-			temp++;
+			first = find(first->first);
+			erase(first++);
 		}
-		for (size_t i = 0; i < it_vec.size(); i++)
-			_rb_tree.erase(it_vec[i]);
 	}
 
 	void					swap( map & x)

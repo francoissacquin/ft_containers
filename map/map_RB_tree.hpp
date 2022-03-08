@@ -141,6 +141,7 @@ public:
 		delete_all_nodes(x->right);
 		_pair_alloc.destroy(&(x->data));
 		_node_alloc.deallocate(x, 1);
+		_size--;
 	}
 
 	void	in_order_tree_fill(NodePtr n)

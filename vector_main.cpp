@@ -190,7 +190,7 @@ int main()
 	tmp = insert_in_me.begin() + 4;
 	insert_in_me.insert(tmp, 8, test);
 
-	return (0);
+	
 	for (size_t i = 0; i < insert_in_me.size(); i++)
 	{
 		for (size_t j = 0; j < insert_in_me.at(i).size(); j++)
@@ -202,7 +202,7 @@ int main()
 	cout << "Const it.front() : " << std::endl;
 	cout << (*const_it).front() << '\n';
 
-return (0);
+
 	//INSERT
 	cout << "\nINSERT\n";
 	ft::vector<ft::vector<int> >	std_insert_in_me;
@@ -231,8 +231,9 @@ return (0);
 	for (size_t i = 0; i < insert_bis.size(); i++)
 		cout << insert_bis[i].back() << ' ';
 	cout << '\n';
-
+	
 	insert_bis.insert(insert_bis.begin() + 5, insert_in_me.begin(), insert_in_me.end());
+
 	for (size_t i = 0; i < insert_bis.size(); i++)
 		cout << insert_bis[i].back() << ' ';
 	cout << '\n';
@@ -359,7 +360,7 @@ return (0);
 			cout << MIKE[i][j] << ' ';
 	cout << std::endl;
 	}
-	
+
 	//RELATIONAL OPERATORS
 	cout << "\nRELATIONAL OPERATORS\n";
 	ft::vector<ft::vector<int> > MIKE_2(MIKE);
@@ -374,285 +375,10 @@ return (0);
 	cout << '\n';
 
 	cout << std::endl;
-	return (0);
-}
 
 
-// template <class Key, class T>
-// void	print(ft::map<Key, T>& lst)
-// {
-// 	for (typename ft::map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
-// 		std::cout << it->first << " => " << it->second << '\n';
-// }
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// int main ()
-// {
-//   ft::map<char,int> foo,bar;
-
-//   foo['x']=100;
-//   foo['y']=200;
-
-//   bar['a']=11;
-//   bar['b']=22;
-//   bar['c']=33;
-
-
-//   ft::map<char, int>::const_iterator tmp = foo.begin(); //tmp iterates through foo
-//   ft::map<char, int>::const_iterator tmp2 = bar.begin(); //tmp2 iterates through bar
-
-// 	return (0);
-//   swap(bar, foo); //tmp iterates through bar
-// 				//tmp2 iterates through foo
-	
-
-//   ft::map<char, int>	other;
-
-//   other['1'] = 73;
-//   other['2'] = 173;
-//   other['3'] = 763;
-//   other['4'] = 73854;
-//   other['5'] = 74683;
-//   other['6'] = 753;
-
-//   ft::map<char, int>::const_iterator tmp3 = other.begin(); // tmp3 iterates through other
-
-
-//   std::cout << "foo contains:\n";
-//   int		i = 0;
-//   for (ft::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
-//   {
-//     std::cout << it->first << " => " << it->second << '\n';
-//   }
-
-//   std::cout << "bar contains:\n";
-//   for (ft::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
-//     std::cout << it->first << " => " << it->second << '\n';
-// 	return (0);
-// 	while(tmp != bar.end() && i < 20)
-// 	{
-// 		std::cout << tmp->first << " => " << tmp->second << '\n';
-// 		tmp++;
-// 		i++;
-// 	}
-// 	tmp--;
-
-// 	return (0);
-
-// 	while(tmp2 != foo.end())
-// 	{
-// 		std::cout << tmp2->first << " => " << tmp2->second << '\n';
-// 		tmp2++;
-// 	}
-// 	tmp2--;
-
-// 	swap(other, foo); //tmp2 iterates through other
-// 					//tmp3 iterates throught foo
-// 	print(other);
-// 	print(foo);
-// 	print(bar);
-// 	while(tmp != bar.begin())
-// 	{
-// 		std::cout << tmp->first << " => " << tmp->second << '\n';
-// 		tmp--;
-// 	}
-// 	std::cout << tmp->first << " => " << tmp->second << '\n';
-
-// 	while(tmp2 != other.begin())
-// 	{
-// 		std::cout << tmp2->first << " => " << tmp2->second << '\n';
-// 		tmp2--;
-// 	}
-// 	std::cout << tmp2->first << " => " << tmp2->second << '\n';
-
-// 	while(tmp3 != foo.end())
-// 	{
-// 		std::cout << tmp3->first << " => " << tmp3->second << '\n';
-// 		tmp3++;
-// 	}
-// 	tmp3--;
-
-// 	swap(bar, foo);
-// 	swap(foo, bar);
-// 	swap(bar, foo); //tmp3 iterates through bar
-// 				//tmp iterates through foo
-
-// 	print(other);
-// 	print(foo);
-// 	print(bar);
-
-// 	while(tmp != foo.end())
-// 	{
-// 		std::cout << tmp->first << " => " << tmp->second << '\n';
-// 		tmp++;
-// 	}
-
-// 	while(tmp2 != other.end())
-// 	{
-// 		std::cout << tmp2->first << " => " << tmp2->second << '\n';
-// 		tmp2++;
-// 	}
-
-// 	while(tmp3 != bar.begin())
-// 	{
-// 		std::cout << tmp3->first << " => " << tmp3->second << '\n';
-// 		tmp3--;
-// 	}
-// 	std::cout << tmp3->first << " => " << tmp3->second << '\n';
-
-// 	return (0);
-// }
-
-
-
-// struct ft_more {
-// 	bool	operator()(const int &first, const int &second) const {
-// 		return (first > second);
-// 	}
-// };
-
-
-
-
-// 		template <class Key, class T>
-// 		void	print(ft::map<Key, T>& lst)
-// 		{
-// 			for (typename ft::map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
-// 				std::cout << *it << ' ';
-// 			std::cout << '\n';
-// 		}
-
-// 		int main()
-// 		{
-// 			ft::pair<int, std::string>			my_pair(8, "salut");
-// 			ft::map<int, std::string>			test;
-// 			ft::map<int, std::string>::iterator	it;
-
-// 			test.insert(my_pair);
-// 			test.insert(ft::pair<int, std::string>(-4, "bar"));
-// 			test.insert(ft::pair<int, std::string>(2, "machin"));
-// 			test.insert(ft::pair<int, std::string>(3, "foo"));
-// 			test.insert(ft::pair<int, std::string>(746, "Marcel"));
-// 			test.insert(ft::pair<int, std::string>(1, "truc"));
-// 			it = test.begin();
-// 			std::cout << '\n';
-
-// 			while (it != test.end())
-// 			{
-// 				// cout << "start of while\n";
-// 				std::cout << it->first << ", " << it->second << '\n';
-// 				it++;
-// 		// 		cout << "iterator incremented\n";
-
-// // #ifndef STD
-// // 		cout << it.getPointer() << '\n';
-// // 		cout << test.end().getPointer() << '\n';
-// // #endif
-
-// 			}
-// 			std::cout << "End of display loop\n";
-
-// 		}
-
-
-
-
-/*
-int main()
-{
-
-	// {
-	// 	ft::map<int, char>		bst;
-
-	// 	for (int i = 1; i < 20; i++)
-	// 	{
-	// 		ft::pair<int, char>		temp = ft::make_pair(i, i + 96);
-	// 		bst.insert(temp);
-	// 	}
-
-	// 	ft::map<int, char>::iterator	it = bst.begin();
-	// 	ft::map<int, char>::iterator	ite = bst.end();
-
-	// 	bst.print_tree();
-	// 	while (it != ite)
-	// 	{
-	// 		std::cout << it->first << " : " << it->second << std::endl;
-	// 		++it;
-	// 	}
-
-	// 	// ft::pair<int, char>		temp = ft::make_pair(1, 1 + 96);
-	// 	// bst.insert(temp);
-
-	// 	bst.print_tree();
-	// 	return 0;
-	// }
-
-
-
-		template <class Key, class T>
-		void	print(map<Key, T>& lst)
-		{
-			for (typename map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
-				cout << *it << ' ';
-			cout << '\n';
-		}
-
-		int main()
-		{
-			pair<int, string>			my_pair(8, "salut");
-			map<int, string>			test;
-			map<int, string>::iterator	it;
-
-			test.insert(my_pair);
-			test.insert(pair<int, string>(-4, "bar"));
-			test.insert(pair<int, string>(2, "machin"));
-			test.insert(pair<int, string>(3, "foo"));
-			test.insert(pair<int, string>(746, "Marcel"));
-			test.insert(pair<int, string>(1, "truc"));
-			it = test.begin();
-			cout << '\n';
-
-			while (it != test.end())
-			{
-				// cout << "start of while\n";
-				cout << it->first << ", " << it->second << '\n';
-				it++;
-		// 		cout << "iterator incremented\n";
-
-// #ifndef STD
-// 		cout << it.getPointer() << '\n';
-// 		cout << test.end().getPointer() << '\n';
-// #endif
-
-			}
-			cout << "End of display loop\n";
-
-		}
-
-	{
-		ft::map<int, std::string, ft_more> mp;
-
-		mp[42] = "fgzgxfn";
-		mp.print_tree();
-		mp[25] = "funny";
-		mp.print_tree();
-		mp[80] = "hey";
-		mp.print_tree();
-		mp[12] = "no";
-		mp.print_tree();
-		mp[27] = "bee";
-		mp.print_tree();
-		mp[90] = "8";
-		mp.print_tree();
-
-		ft::map<int, std::string>::iterator		mp_it = mp.begin();
-		while (mp_it != mp.end())
-		{
-			std::cout << mp_it->first << " : " << mp_it->second << std::endl;
-			++mp_it;
-		}
-
-		return (0);
-	}
 
 	srand(time(0));
 
@@ -1406,4 +1132,4 @@ int main()
 	}
 
 	return 0;
-} */
+} 
