@@ -1,4 +1,6 @@
-#include "../vector.hpp"
+# include "../vector.hpp"
+# include <vector>
+#include <iterator>
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
@@ -637,10 +639,10 @@ int main()
 		std::cout << "temp[9] = "<< temp[9] << std::endl;
 		std::cout << "temp[2] = "<< temp[2] << std::endl;
 		std::cout << "temp[6] = "<< temp[6] << std::endl;
-		std::cout << "Displaying incorrect vector elements through brackets : " << std::endl;
+		// std::cout << "Displaying incorrect vector elements through brackets : " << std::endl;
 		std::cout << "size of the vector = " << temp.size() << std::endl;
 		//std::cout << "temp[50] = "<< temp[50] << std::endl;
-		std::cout << "temp[-5] = "<< temp[-5] << std::endl;
+		// std::cout << "temp[-5] = "<< temp[-5] << std::endl;
 		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
 		std::cout << std::endl << std::endl;
 	}
@@ -665,25 +667,25 @@ int main()
 		std::cout << "temp.at(9) = "<< temp.at(9) << std::endl;
 		std::cout << "temp.at(2) = "<< temp.at(2) << std::endl;
 		std::cout << "temp.at(6) = "<< temp.at(6) << std::endl;
-		std::cout << "Displaying incorrect vector elements through at() member function: " << std::endl;
-		std::cout << "Displaying incorrect vector elements through brackets : " << std::endl;
-		std::cout << "size of the vector = " << temp.size() << std::endl;
-		try
-		{
-			std::cout << "temp.at(50) = "<< temp.at(50) << std::endl;
-		}
-		catch (std::exception & error)
-		{
-			std::cout << "Error out_of_range returned for " << error.what() << std::endl;
-		}
-		try
-		{
-			std::cout << "temp.at(-5) = "<< temp.at(-5) << std::endl;
-		}
-		catch (std::exception & error)
-		{
-			std::cout << "Error out_of_range returned for " << error.what() << std::endl;
-		}
+		// std::cout << "Displaying incorrect vector elements through at() member function: " << std::endl;
+		// std::cout << "Displaying incorrect vector elements through brackets : " << std::endl;
+		// std::cout << "size of the vector = " << temp.size() << std::endl;
+		// try
+		// {
+		// 	std::cout << "temp.at(50) = "<< temp.at(50) << std::endl;
+		// }
+		// catch (std::exception & error)
+		// {
+		// 	std::cout << "Error out_of_range returned for " << error.what() << std::endl;
+		// }
+		// try
+		// {
+		// 	std::cout << "temp.at(-5) = "<< temp.at(-5) << std::endl;
+		// }
+		// catch (std::exception & error)
+		// {
+		// 	std::cout << "Error out_of_range returned for " << error.what() << std::endl;
+		// }
 		//std::cout << "|||----------------------------------------------------------------------------------|||" << std::endl;
 		std::cout << std::endl << std::endl;
 	}
@@ -767,7 +769,7 @@ int main()
 		std::cout << "Creating a default constructed vector called temp ..." << std::endl;
 		std::cout << "Trying to pop_back an empty vector : " << std::endl;
 		std::cout << "temp.popback()" << std::endl;
-		temp.pop_back();
+		//temp.pop_back();
 		std::cout << std::endl;
 		std::cout << "Adding 20 values with push_back : " << std::endl;
 		for (int i = 0; i < 20; i++)
@@ -927,10 +929,10 @@ int main()
 		}
 		std::cout << std::endl << std::endl;
 		std::cout << "Creating 4 iterators, 2 begin() iterators and 2 end() iterators for each vector ..." << std::endl;
-		random_access_iterator<int>		temp_begin = temp.begin();
-		random_access_iterator<int>		temp_end = temp.end();
-		random_access_iterator<int>		temp_2_begin = temp_2.begin();
-		random_access_iterator<int>		temp_2_end = temp_2.end();
+		vector<int>::iterator		temp_begin = temp.begin();
+		vector<int>::iterator		temp_end = temp.end();
+		vector<int>::iterator		temp_2_begin = temp_2.begin();
+		vector<int>::iterator		temp_2_end = temp_2.end();
 		std::cout << "iterator 1 = vector 1 begin     = " << *temp_begin << std::endl;
 		std::cout << "iterator 2 = vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
 		std::cout << "iterator 3 = vector 2 begin     = " << *temp_2_begin << std::endl;
@@ -1105,10 +1107,10 @@ int main()
 		}
 		std::cout << std::endl << std::endl;
 		std::cout << "Creating 4 iterators, 2 begin() iterators and 2 end() iterators for each vector ..." << std::endl;
-		random_access_iterator<int>		temp_begin = temp.begin();
-		random_access_iterator<int>		temp_end = temp.end();
-		random_access_iterator<int>		temp_2_begin = temp_2.begin();
-		random_access_iterator<int>		temp_2_end = temp_2.end();
+		vector<int>::iterator		temp_begin = temp.begin();
+		vector<int>::iterator		temp_end = temp.end();
+		vector<int>::iterator		temp_2_begin = temp_2.begin();
+		vector<int>::iterator		temp_2_end = temp_2.end();
 		std::cout << "iterator 1 = vector 1 begin     = " << *temp_begin << std::endl;
 		std::cout << "iterator 2 = vector 1 end() - 1 = " << *(temp_end - 1) << std::endl;
 		std::cout << "iterator 3 = vector 2 begin     = " << *temp_2_begin << std::endl;

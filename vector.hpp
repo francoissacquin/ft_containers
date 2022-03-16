@@ -14,6 +14,10 @@
 namespace ft
 {
 
+	static std::ostream& 									cout = std::cout;
+	typedef std::string										string;
+
+
 // Template parameters are : T (element type) and Allocator (for memory allocation)
 template < typename T, typename Alloc = std::allocator<T> >
 class vector

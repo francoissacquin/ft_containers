@@ -1,4 +1,6 @@
 #include "../vector.hpp"
+#include <vector>
+#include <iterator>
 #include <iostream>
 #include <time.h>
 #include <sys/time.h>
@@ -86,11 +88,11 @@ void constructor_bench()
 
     size_t start = chrono_init();
 
-    NAMESPACE::vector<std::string> *test;
+    vector<std::string> *test;
     std::cout << "Constructor Default" << std::endl;
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
     {
-        test = new NAMESPACE::vector<std::string>;
+        test = new vector<std::string>;
         delete test;
     }
     std::cout << stamp_time(start) <<  "ms" <<std::endl;
@@ -98,7 +100,7 @@ void constructor_bench()
     std::cout << "Constructor fill" << std::endl;
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
     {
-        test = new NAMESPACE::vector<std::string>(10, "blop");
+        test = new vector<std::string>(10, "blop");
         delete test;
     }
      std::cout << stamp_time(start) << "ms" << std::endl;
@@ -109,17 +111,17 @@ void constructor_bench()
     start = chrono_init();
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
     {
-        test = new NAMESPACE::vector<std::string>(just_a_list.begin(), just_a_list.end());
+        test = new vector<std::string>(just_a_list.begin(), just_a_list.end());
         delete test;
     }
     std::cout << stamp_time(start) << "ms" << std::endl;
 
     std::cout << "Constructor copy" << std::endl;
-    NAMESPACE::vector<std::string> little_things_in(15, "gift");
+    vector<std::string> little_things_in(15, "gift");
     start = chrono_init();
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
     {
-        test = new NAMESPACE::vector<std::string>(little_things_in);
+        test = new vector<std::string>(little_things_in);
         delete test;
     }
     std::cout << stamp_time(start) << "ms" << std::endl;
@@ -130,12 +132,12 @@ void operator_assign()
 {
     std::cout << "Operator assign bench" << std::endl;
 
-    NAMESPACE::vector<std::string> test;
+    vector<std::string> test;
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
     {
         test.push_back("miaou");
     }
-    NAMESPACE::vector<std::string> ditto;
+    vector<std::string> ditto;
     size_t start = chrono_init();
     ditto = test;
     std::cout << stamp_time(start) <<  "ms" <<std::endl;
@@ -146,7 +148,7 @@ void resize_bench()
 {
     std::cout << "Resize bench" << std::endl;
 
-    NAMESPACE::vector<std::string> test;
+    vector<std::string> test;
     std::cout << "size up one by one" << std::endl;
     size_t start = chrono_init();
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
@@ -167,7 +169,7 @@ void reserve_bench()
 {
     std::cout << "Reserve bench" << std::endl;
 
-    NAMESPACE::vector<std::string> test;
+    vector<std::string> test;
     std::cout << "size up one by one" << std::endl;
     size_t start = chrono_init();
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
@@ -179,7 +181,7 @@ void reserve_bench()
 
 void crochet_bench()
 {
-    NAMESPACE::vector<std::string> test;
+    vector<std::string> test;
     std::cout << "Crochet bench" << std::endl;
     for (int i = 0; i < NB_OF_ELEMENTS; i++)
     {
@@ -195,7 +197,7 @@ void crochet_bench()
 
 void assign_bench()
 {
-    NAMESPACE::vector<std::string> test;
+    vector<std::string> test;
 
     std::cout << "Assign bench" << std::endl;
     std::cout << "fill version" << std::endl;
@@ -203,7 +205,7 @@ void assign_bench()
     test.assign(NB_OF_ELEMENTS,  "welcome");
     test.assign(NB_OF_ELEMENTS,  "welcome");
     std::cout << stamp_time(start) <<  "ms" <<std::endl;
-    NAMESPACE::vector<std::string> test2;
+    vector<std::string> test2;
     std::cout << "range version" << std::endl;
     start = chrono_init();
     for (int i = 0; i < 20;i++)
@@ -216,7 +218,7 @@ void assign_bench()
 
 void push_pop_back_bench()
 {
-    NAMESPACE::vector<std::string> test;
+    vector<std::string> test;
     std::cout << "push_back bench" << std::endl;
     size_t start = chrono_init();
     for (int i = 0; i < NB_OF_ELEMENTS * 2;i++)
@@ -235,7 +237,7 @@ void push_pop_back_bench()
 
 void insert_bench()
 {
-    NAMESPACE::vector<std::string> test;
+    vector<std::string> test;
     std::cout << "insert bench" << std::endl;
     std::cout << "single element" << std::endl;
     size_t start = chrono_init();
@@ -252,7 +254,7 @@ void insert_bench()
         test.insert(test.begin() + i/2 , 3 ,"sameastheprevious");
     }
     std::cout << stamp_time(start) <<  "ms" <<std::endl;
-    NAMESPACE::vector<std::string> test2;
+    vector<std::string> test2;
     std::cout << "range element" << std::endl;
     start = chrono_init();
     for (int i = 0; i < 5000 ;i++)
@@ -264,8 +266,8 @@ void insert_bench()
 
 void swap_bench()
 {
-    NAMESPACE::vector<std::string> swap_a(100, "opop");
-    NAMESPACE::vector<std::string> swap_b(100, "ploup");
+    vector<std::string> swap_a(100, "opop");
+    vector<std::string> swap_b(100, "ploup");
 
     std::cout << "Swap Bench" << std::endl;
     size_t start = chrono_init();
@@ -286,6 +288,6 @@ int main()
     push_pop_back_bench();
     swap_bench();
     insert_bench();
-    random_stuff();
+    //random_stuff();
 
 }
