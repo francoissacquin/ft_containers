@@ -16,6 +16,8 @@ SRCS_SET = ./test_mains/set_main.cpp
 
 SRCS_TIME = ./test_mains/time_benchmark_vector.cpp
 
+SRCS_TIME_2 = ./test_mains/time_benchmark_map.cpp
+
 INC = ./vector/equal.hpp \
  ./vector/lexicographical_compare.hpp \
  ./vector/random_access_iterator.hpp \
@@ -37,6 +39,8 @@ OBJS_STACK:= ${SRCS_STACK:.cpp=.o}
 OBJS_SET:= ${SRCS_SET:.cpp=.o}
 
 OBJS_TIME := ${SRCS_TIME:.cpp=.o}
+
+OBJS_TIME_2 := ${SRCS_TIME_2:.cpp=.o}
 
 all : ${NAME}
 
@@ -61,17 +65,21 @@ set_ : ${OBJS_SET}
 			$(CC) $(CFLAGS) -o ft_set ${SRCS_SET}
 
 time_bench:	${OBJS_TIME}
-			$(CC) $(CFLAGS) -D STD -o $(NAME_STD) ${SRCS_TIME}
-			$(CC) $(CFLAGS) -o $(NAME_FT) ${SRCS_TIME}
+			$(CC) $(CFLAGS) -D STD -o std_time_vector ${SRCS_TIME}
+			$(CC) $(CFLAGS) -o ft_time_vector ${SRCS_TIME}
+
+time_bench_2: ${OBJS_TIME_2}
+				$(CC) $(CFLAGS) -D STD -o std_time_map ${SRCS_TIME_2}
+				$(CC) $(CFLAGS) -o ft_time_map ${SRCS_TIME_2}
 
 %.o: %.cpp
 		$(CC) $(CFLAGS) -o $@ -c $<
 
 clean :
-		rm -rf ${OBJS} ${OBJS_VECTOR} ${OBJS_MAP} ${OBJS_STACK} ${OBJS_TIME} ${OBJS_SET}
+		rm -rf ${OBJS} ${OBJS_VECTOR} ${OBJS_MAP} ${OBJS_STACK} ${OBJS_TIME} ${OBJS_TIME_2} ${OBJS_SET}
 
 fclean : clean
-			rm -rf ${NAME} ${NAME_STD} ${NAME_FT} std_vector ft_vector std_map ft_map std_stack ft_stack std_set ft_set
+			rm -rf ${NAME} ${NAME_STD} ${NAME_FT} std_vector ft_vector std_map ft_map std_stack ft_stack std_set ft_set std_time_vector ft_time_vector std_time_map ft_time_map
 
 re	:	fclean all
 

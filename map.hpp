@@ -233,9 +233,8 @@ public:
 
 	size_type				erase( const key_type & k )
 	{
-		if (count(k))
+		if (_rb_tree.erase(k))
 		{
-			_rb_tree.erase(k);
 			return 1;
 		}
 		return 0;
@@ -348,10 +347,10 @@ public:
 		 return _allocation;
 	 }
 
-	 void					print_tree( void )
-	 {
-		 _rb_tree.print_tree();
-	 }
+	//  void					print_tree( void )
+	//  {
+	// 	 _rb_tree.print_tree();
+	//  }
 
 }; //end of map class
 

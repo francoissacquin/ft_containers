@@ -303,10 +303,10 @@ public:
 		 return _allocation;
 	 }
 
-	 void					print_tree( void )
-	 {
-		 _rb_tree.print_tree();
-	 }
+	//  void					print_tree( void )
+	//  {
+	// 	 _rb_tree.print_tree();
+	//  }
 
 
 }; // end of set class

@@ -96,9 +96,9 @@ int main()
 		}
 		print_map(test);
 		std::cout << "key = " << test.begin()->first << "| value = " << test.begin()->second << std::endl;
-		std::cout << "key = " << (--(test.end()))->first << "| value = " << --test.end()->second << std::endl;
+		std::cout << "key = " << (--(test.end()))->first << "| value = " << (--(test.end()))->second << std::endl;
 		std::cout << "key = " << test.rbegin()->first << "| value = " << test.rbegin()->second << std::endl;
-		std::cout << "key = " << (--(test.rend()))->first << "| value = " << --test.rend()->second << std::endl;
+		std::cout << "key = " << (--(test.rend()))->first << "| value = " << (--(test.rend()))->second << std::endl;
 	}
 	{
 		std::cout << "Empty : " << std::endl;

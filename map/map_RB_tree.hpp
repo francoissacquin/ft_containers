@@ -367,15 +367,14 @@ public:
 		return ret;
 	}
 
-	void		erase( key_type k)
+	bool		erase( key_type k)
 	{
+		bool	ret;
 		if (_root == _TNULL)
-			return ;
-		NodePtr			n = search_tree(k);
-		if (n == _TNULL)
-			return ;
-		delete_node(n->data);
+			return false;
+		ret = delete_node_helper(this->_root, k);
 		_TNULL->parent = _root;
+		return ret;
 	}
 
 
@@ -636,7 +635,7 @@ private:
 		v->parent = u->parent;
 	}
 
-	void		delete_node_helper(NodePtr n, value_type k)
+	bool		delete_node_helper(NodePtr n, key_type k)
 	{
 		// first we try to find the node corresponding to the pair k
 		NodePtr		z = _TNULL;
@@ -645,12 +644,12 @@ private:
 
 		while (n != _TNULL) // while loop where we search for value_type k
 		{
-			if ((!(key_compare() (n->data.first, k.first))) && (!(key_compare() (k.first, n->data.first))))
+			if ((!(key_compare() (n->data.first, k))) && (!(key_compare() (k, n->data.first))))
 			{
 				z = n;
 				break ;
 			}
-			else if (key_compare() (n->data.first, k.first))
+			else if (key_compare() (n->data.first, k))
 			{
 				n = n->right;
 			}
@@ -662,7 +661,7 @@ private:
 
 		if (z == _TNULL)
 		{
-			return ;
+			return false;
 		}
 
 		y = z;
@@ -702,6 +701,7 @@ private:
 		if (y_original_color == 0)
 			fix_delete(x);
 		_size--;
+		return true;
 	}
 
 	//fixing the red black tree after insertion of new node
